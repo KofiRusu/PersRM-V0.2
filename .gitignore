@@ -36,4 +36,12 @@ temp/
 *.sublime-workspace
 *.sublime-project
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Large model files
+models/*/pytorch_model.bin
+models/*/*.onnx
+models/*/*.safetensors
+*.bin
+*.onnx
+*.safetensors 
