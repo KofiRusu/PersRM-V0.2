@@ -1,0 +1,13 @@
+{
+  "id": "calendar",
+  "name": "Calendar Integration Plugin",
+  "description": "Integration with Google Calendar and system calendars",
+  "version": "1.0.0",
+  "author": "PersLM Team",
+  "entry_point": "plugin.py",
+  "permissions": [
+    "network",
+    "calendar_access"
+  ],
+  "requires": []
+} 

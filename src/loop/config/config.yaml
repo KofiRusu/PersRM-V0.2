@@ -1,0 +1,118 @@
+# Autonomy Loop Configuration
+
+# Autonomy level configuration
+autonomy:
+  # Level options: disabled, assisted, supervised, full
+  default_level: supervised
+  
+  # Task execution
+  max_concurrent_tasks: 5
+  
+  # Approval configuration (for supervised mode)
+  require_approval:
+    new_tasks: true      # Require approval for new tasks
+    modified_tasks: true # Require approval for modified tasks
+    high_risk: true      # Always require approval for high-risk tasks
+  
+  # Safety configuration
+  safety:
+    enable_safety_checks: true
+    max_runtime_per_task: 300  # Maximum runtime per task in seconds
+    max_chain_depth: 10        # Maximum depth of task chains
+    restricted_actions: []     # List of actions that are not allowed
+  
+  # Persistence configuration
+  persistence:
+    enable: true
+    storage_dir: data/autonomy
+    auto_save: true
+    save_interval: 60  # Seconds between auto-saves
+
+# Scheduler configuration
+scheduler:
+  enable: true
+  check_interval: 1.0  # Seconds between schedule checks
+  storage_dir: data/scheduler
+  
+  # Default recurring tasks
+  recurring_tasks:
+    - name: Daily Review
+      description: Review system performance and user interactions from the previous day
+      schedule_type: daily
+      time_of_day: "03:00"  # Run at 3 AM
+      action: daily_review
+      parameters:
+        max_items: 100
+      enabled: true
+      
+    - name: Memory Consolidation
+      description: Consolidate and organize memory based on recent interactions
+      schedule_type: interval
+      interval: 43200  # 12 hours
+      action: memory_consolidation
+      parameters:
+        memory_limit: 1000
+      enabled: true
+      
+    - name: News Update
+      description: Fetch and summarize latest news
+      schedule_type: daily
+      time_of_day: "07:00"  # Run at 7 AM
+      action: news_update
+      parameters:
+        categories: ["technology", "science", "world"]
+        max_articles: 10
+      enabled: true
+
+# Feedback configuration
+feedback:
+  storage_dir: data/feedback
+  auto_save: true
+  save_interval: 60  # Seconds between auto-saves
+  
+  # Automatic feedback collection
+  collect:
+    response_quality: true    # Collect feedback on response quality
+    task_completion: true     # Collect feedback on task completion
+    reasoning_quality: true   # Collect feedback on reasoning quality
+    tool_usage: true          # Collect feedback on tool usage
+    hallucination: true       # Collect feedback on hallucinations
+  
+  # Learning from feedback
+  learning:
+    enable: true
+    update_interval: 1800  # 30 minutes
+    min_samples: 10        # Minimum samples before learning
+    max_samples: 1000      # Maximum samples to keep
+
+# Task templates
+tasks:
+  daily_review:
+    description: Review system performance and user interactions
+    action: daily_review
+    parameters:
+      timeframe: "1 day"
+      include_metrics: true
+      include_feedback: true
+      generate_report: true
+  
+  summarize_news:
+    description: Fetch and summarize news articles
+    action: news_update
+    parameters:
+      categories: ["technology", "science", "world"]
+      max_articles: 10
+  
+  debug_errors:
+    description: Analyze and attempt to resolve recent errors
+    action: debug_errors
+    parameters:
+      max_errors: 10
+      auto_fix: false
+  
+  knowledge_update:
+    description: Update system knowledge based on new information
+    action: knowledge_update
+    parameters:
+      sources: ["news", "research_papers", "documentation"]
+      max_items: 20 

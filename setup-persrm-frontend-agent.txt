@@ -1,0 +1,64 @@
+# PersRM Reasoning Agent – Frontend + UX Optimization Setup
+
+Objective:
+Configure and activate a PersRM-powered agent to support full-stack UI/UX development and optimization in all projects. The agent should function in parallel with Cursor and optionally in a dedicated GUI window. It should meet or exceed the standards from the previously implemented UX Enhancer system.
+
+## Agent Capabilities Required:
+
+1. 🔍 Visual + Accessibility Analysis
+   - Run layout consistency checks, screenshot diffs, CLS scoring
+   - Validate accessibility (WCAG 2.1 AA) using axe-core or equivalent
+
+2. 🎨 Design Token Validation
+   - Extract and analyze spacing, typography, color tokens
+   - Cross-check against design systems (e.g., Tailwind config)
+
+3. 🌀 Animation Performance Analysis
+   - Track FPS, jank, duration
+   - Recommend smoother transitions based on KLM principles
+
+4. 🧠 Cognitive Load Simulation
+   - Simulate task completion via KLM/GOMS
+   - Detect confusion points and UX bottlenecks
+
+5. ⚡ Component Generation
+   - Generate accessible, performant, styled UI components (React + Tailwind)
+   - Align structure with tokens and reasoning outputs
+
+6. 🧪 Mock Dataset + Test Scaffolding
+   - Seed mock components + user flows
+   - Auto-generate test scenarios and visual baselines
+
+7. 📊 Auto Dashboard + Report Generator
+   - Generate HTML/JSON reports from each phase
+   - Embed in dashboard or export via CLI
+
+8. 🔁 CI/PR Workflow Integration
+   - Run analysis on PRs
+   - Upload reports and comment with score/emojis
+
+## Configuration:
+
+- Run in a separate window if `--gui` is passed
+- Accept a `pluginRegistry` or auto-detect from project structure
+- Allow command chaining from Cursor (⌘K) via: 
+  - “Analyze UI with PersRM”
+  - “Generate UX report”
+  - “Run full frontend enhancement”
+
+## Outputs:
+- `UXEnhancementSummary` with per-phase scores and suggestions
+- Downloadable report at `/reports/ux-enhancement-report.html`
+- Visualized dashboard (local at `/dashboard/ux`)
+- Comment/feedback on PR if running in CI context
+
+## Validation:
+Ensure the system uses:
+- Typed data (`types.ts`)
+- Snapshot diffs (`VisualAnalyzer`)
+- Token consistency metrics (`DesignTokenAnalyzer`)
+- Phase scoring (`PhaseResult[]`)
+- Reusable seed data (`mockComponentData.ts`)
+- CLI trigger or hookable method (`runFullOptimization()`)
+
+# Begin implementation below

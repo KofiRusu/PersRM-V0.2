@@ -1,0 +1,105 @@
+version: '3.8'
+
+services:
+  perslm:
+    build:
+      context: ../..
+      dockerfile: deployment/docker_runtime/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../../data:/app/data
+      - ../../models:/app/models
+      - ../../cache:/app/cache
+    ports:
+      - "5000:5000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - MODEL_NAME=mistralai/Mistral-7B-Instruct-v0.2
+      - QUANTIZATION=4bit
+      - PORT=5000
+      - HOST=0.0.0.0
+      - USE_VLLM=true
+      - ENABLE_STREAMING=true
+      - MAX_CONTEXT_LENGTH=4096
+      - MAX_NEW_TOKENS=2048
+      - ENABLE_CACHE=true
+      - LOG_LEVEL=info
+    command: 
+      - "--model"
+      - "${MODEL_NAME:-mistralai/Mistral-7B-Instruct-v0.2}"
+      - "--quantization"
+      - "${QUANTIZATION:-4bit}"
+      - "--port"
+      - "${PORT:-5000}"
+      - "--host"
+      - "${HOST:-0.0.0.0}"
+      - "--use-vllm"
+      - "${USE_VLLM:-true}"
+      - "--max-context-length"
+      - "${MAX_CONTEXT_LENGTH:-4096}"
+      - "--enable-streaming"
+      - "${ENABLE_STREAMING:-true}"
+      - "--enable-cache"
+      - "${ENABLE_CACHE:-true}"
+
+  # Optional CPU-only fallback service
+  perslm-cpu:
+    build:
+      context: ../..
+      dockerfile: deployment/docker_runtime/Dockerfile.cpu
+    restart: unless-stopped
+    volumes:
+      - ../../data:/app/data
+      - ../../models:/app/models
+      - ../../cache:/app/cache
+    ports:
+      - "5001:5000"
+    environment:
+      - MODEL_NAME=mistralai/Mistral-7B-Instruct-v0.2
+      - QUANTIZATION=8bit
+      - PORT=5000
+      - HOST=0.0.0.0
+      - ENABLE_STREAMING=true
+      - MAX_CONTEXT_LENGTH=2048
+      - MAX_NEW_TOKENS=1024
+      - ENABLE_CACHE=true
+      - LOG_LEVEL=info
+    profiles:
+      - cpu-only
+
+  # Optional monitoring service
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    profiles:
+      - monitoring
+
+  # Optional dashboard service
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - prometheus
+    profiles:
+      - monitoring
+
+volumes:
+  grafana_data: 

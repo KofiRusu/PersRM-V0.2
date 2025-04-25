@@ -1,0 +1,82 @@
+# Real-time Interaction Configuration
+
+# Speech-to-Text Configuration
+speech:
+  # Backend options: whisper_local, openai, system
+  backend: whisper_local
+  
+  # Whisper model size (tiny, base, small, medium, large)
+  model_name: base
+  
+  # Language code (en, fr, de, etc.) or null for auto-detection
+  language: null
+  
+  # Audio recording configuration
+  audio:
+    sample_rate: 16000
+    channels: 1
+    format: int16
+    chunk_size: 1024
+    silence_threshold: 0.03  # Threshold for voice activity detection
+    silence_duration: 2.0    # Seconds of silence to stop recording
+    max_duration: 30.0       # Maximum recording duration in seconds
+    device_index: null       # Audio device index or null for default
+  
+  # Voice Activity Detection
+  enable_vad: true
+  
+  # API key for OpenAI (if using openai backend)
+  api_key: null
+
+# Text-to-Speech Configuration
+tts:
+  # Backend options: system, pyttsx3, edge_tts, openai, elevenlabs
+  backend: system
+  
+  # Voice configuration
+  voice:
+    voice_id: default    # Voice identifier or 'default'
+    language: en-US      # Language code
+    gender: null         # Male/Female/Neutral or null
+    rate: 1.0            # Speed multiplier
+    pitch: 1.0           # Pitch multiplier
+    volume: 1.0          # Volume multiplier
+  
+  # API key for cloud services (if applicable)
+  api_key: null
+  
+  # Audio format (wav, mp3, ogg)
+  output_format: wav
+  
+  # Caching
+  enable_cache: true
+  cache_dir: cache/tts
+
+# Interaction Configuration
+interaction:
+  # Input options: text, voice, hybrid
+  input_mode: hybrid
+  
+  # Output options: text, voice, hybrid
+  output_mode: hybrid
+  
+  # Behavior
+  interruption_enabled: true        # Allow interrupting responses
+  activity_timeout: 60.0            # Seconds of inactivity before ending session
+  auto_reconnect: true              # Reconnect automatically on errors
+  
+  # Model configuration
+  max_tokens: 1024                  # Maximum tokens in responses
+  streaming: true                   # Enable response streaming
+  
+  # System message for conversation context
+  system_message: "I am an AI assistant designed to be helpful, harmless, and honest. I will interact with you through voice or text."
+  
+  # UI configuration
+  terminal_ui: true                 # Use rich terminal UI if available
+  
+  # Performance
+  latency:
+    max_input_latency: 1.0          # Maximum acceptable input latency (seconds)
+    max_response_latency: 2.0       # Maximum acceptable response latency (seconds)
+    max_tts_latency: 1.0            # Maximum acceptable TTS latency (seconds) 

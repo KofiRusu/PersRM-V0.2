@@ -1,0 +1,138 @@
+{
+  "timestamp": 1745541900993,
+  "summary": {
+    "appName": "PersLM",
+    "overallScore": 63,
+    "maxScore": 100,
+    "issues": [
+      "issue-0",
+      "issue-1",
+      "issue-2",
+      "issue-3",
+      "issue-4",
+      "issue-5",
+      "issue-6",
+      "issue-7",
+      "issue-8",
+      "issue-9",
+      "issue-10",
+      "issue-11",
+      "issue-12"
+    ]
+  },
+  "issues": [
+    {
+      "id": "issue-0",
+      "title": "Optimization Issue 0",
+      "description": "This is a mock issue found during optimization",
+      "severity": "INFO",
+      "component": "Component5"
+    },
+    {
+      "id": "issue-1",
+      "title": "Optimization Issue 1",
+      "description": "This is a mock issue found during optimization",
+      "severity": "INFO",
+      "component": "Component4"
+    },
+    {
+      "id": "issue-2",
+      "title": "Optimization Issue 2",
+      "description": "This is a mock issue found during optimization",
+      "severity": "INFO",
+      "component": "Component5"
+    },
+    {
+      "id": "issue-3",
+      "title": "Optimization Issue 3",
+      "description": "This is a mock issue found during optimization",
+      "severity": "CRITICAL",
+      "component": "Component4"
+    },
+    {
+      "id": "issue-4",
+      "title": "Optimization Issue 4",
+      "description": "This is a mock issue found during optimization",
+      "severity": "ERROR",
+      "component": "Component3"
+    },
+    {
+      "id": "issue-5",
+      "title": "Optimization Issue 5",
+      "description": "This is a mock issue found during optimization",
+      "severity": "WARNING",
+      "component": "Component3"
+    },
+    {
+      "id": "issue-6",
+      "title": "Optimization Issue 6",
+      "description": "This is a mock issue found during optimization",
+      "severity": "WARNING",
+      "component": "Component4"
+    },
+    {
+      "id": "issue-7",
+      "title": "Optimization Issue 7",
+      "description": "This is a mock issue found during optimization",
+      "severity": "INFO",
+      "component": "Component2"
+    },
+    {
+      "id": "issue-8",
+      "title": "Optimization Issue 8",
+      "description": "This is a mock issue found during optimization",
+      "severity": "INFO",
+      "component": "Component4"
+    },
+    {
+      "id": "issue-9",
+      "title": "Optimization Issue 9",
+      "description": "This is a mock issue found during optimization",
+      "severity": "CRITICAL",
+      "component": "Component2"
+    },
+    {
+      "id": "issue-10",
+      "title": "Optimization Issue 10",
+      "description": "This is a mock issue found during optimization",
+      "severity": "WARNING",
+      "component": "Component3"
+    },
+    {
+      "id": "issue-11",
+      "title": "Optimization Issue 11",
+      "description": "This is a mock issue found during optimization",
+      "severity": "WARNING",
+      "component": "Component3"
+    },
+    {
+      "id": "issue-12",
+      "title": "Optimization Issue 12",
+      "description": "This is a mock issue found during optimization",
+      "severity": "INFO",
+      "component": "Component2"
+    }
+  ],
+  "suggestions": [
+    {
+      "id": "suggestion-0",
+      "description": "Suggestion 0: Improve component structure",
+      "impact": 85
+    },
+    {
+      "id": "suggestion-1",
+      "description": "Suggestion 1: Improve component structure",
+      "impact": 26
+    },
+    {
+      "id": "suggestion-2",
+      "description": "Suggestion 2: Improve component structure",
+      "impact": 1
+    },
+    {
+      "id": "suggestion-3",
+      "description": "Suggestion 3: Improve component structure",
+      "impact": 95
+    }
+  ]
+}

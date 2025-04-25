@@ -1,0 +1,87 @@
+# PersLM Application Configuration
+
+# User settings
+user:
+  default_user_id: "default_user"
+
+# UI settings
+ui:
+  ui_type: "qt"  # 'qt' or 'minimal'
+  theme: "light"  # 'light' or 'dark'
+  startup_minimized: false
+  show_in_taskbar: true
+  font_size: 12
+  enable_animations: true
+
+# Notification settings
+notification:
+  enable_notifications: true
+  notification_types: ["info", "warning", "error", "success"]
+  queue_notifications: false
+  icon_dir: ""  # Leave empty for default
+
+# Persistence settings
+persistence:
+  storage_dir: "data/persistence"
+  autosave: true
+  autosave_interval: 300  # Seconds
+
+# Startup settings
+startup:
+  start_with_system: false
+  start_autonomy: true
+  start_minimized: false
+  show_startup_notification: true
+
+# Voice settings
+voice:
+  enable_voice: true
+  input_device: null  # null for default
+  output_device: null  # null for default
+  voice_activation: true
+  activation_threshold: 0.03
+  silence_duration: 2.0
+  
+# Autonomy settings
+autonomy:
+  default_level: "supervised"  # 'disabled', 'assisted', 'supervised', 'full'
+  approval_required_for:
+    - "new_tasks"
+    - "modified_tasks"
+    - "high_risk"
+  notification_on_task:
+    - "completion"
+    - "failure"
+    - "approval_needed"
+
+# Paths and integration
+paths:
+  resources_dir: "resources"
+  logs_dir: "logs"
+  data_dir: "data"
+  realtime_config: "src/realtime/config/config.yaml"
+  autonomy_config: "src/loop/config/config.yaml"
+
+# Background tasks
+background:
+  check_interval: 60  # Seconds
+  enable_notifications: true
+  run_in_low_power: false
+  max_concurrent_tasks: 3
+
+# Performance
+performance:
+  memory_limit: 2048  # MB
+  low_power_mode: false
+  offload_to_gpu: true  # Use GPU acceleration if available
+  
+# Security
+security:
+  encryption_enabled: false
+  require_password: false
+  session_timeout: 0  # Minutes, 0 for no timeout
+
+# Development
+development:
+  debug_mode: false
+  log_level: "info"  # 'debug', 'info', 'warning', 'error' 

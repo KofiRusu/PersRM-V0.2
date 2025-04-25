@@ -1,0 +1,40 @@
+model:
+  name: "mistralai/Mistral-7B-v0.1"
+  type: "mistral"
+  max_length: 4096
+  trust_remote_code: true
+
+training:
+  batch_size: 4
+  gradient_accumulation_steps: 4
+  learning_rate: 2e-5
+  num_train_epochs: 3
+  warmup_steps: 100
+  weight_decay: 0.01
+  fp16: true
+  gradient_checkpointing: true
+
+deepspeed:
+  enabled: true
+  config: "configs/deepspeed_config.json"
+
+data:
+  train_file: "data/train.jsonl"
+  eval_file: "data/eval.jsonl"
+  max_samples: null  # null for full dataset
+  preprocessing:
+    remove_empty: true
+    min_length: 50
+    max_length: 4096
+
+memory:
+  vector_db:
+    type: "faiss"
+    dimension: 4096
+    index_type: "L2"
+  max_entries: 100000
+
+tools:
+  enabled: true
+  max_tools_per_call: 3
+  tool_timeout: 30  # seconds 

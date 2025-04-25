@@ -1,0 +1,35 @@
+{
+  "id": "analysis-1745586879169",
+  "summary": {
+    "id": "summary-1745586879169",
+    "appName": "PersRM App",
+    "version": "1.0.0",
+    "timestamp": "2025-04-25T13:14:39.169Z",
+    "duration": 2347,
+    "overallScore": 69,
+    "maxScore": 100,
+    "phases": [
+      {
+        "phase": "LOAD_TIME",
+        "score": 86,
+        "maxScore": 100,
+        "issues": []
+      },
+      {
+        "phase": "ACCESSIBILITY",
+        "score": 90,
+        "maxScore": 100,
+        "issues": []
+      }
+    ],
+    "issues": [
+      {
+        "id": "issue-1-1745586879170",
+        "component": "components",
+        "description": "Example issue found during analysis",
+        "severity": "WARNING",
+        "phase": "LOAD_TIME"
+      }
+    ]
+  }
+}

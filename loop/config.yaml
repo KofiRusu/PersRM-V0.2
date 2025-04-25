@@ -1,0 +1,88 @@
+# PersLM Autonomy Loop Configuration
+
+# Data storage
+data_dir: "data"
+
+# Safety settings
+safety:
+  enable_safety_checks: true
+  min_score_threshold: 0.7
+  sensitive_actions_require_approval: true
+  blocked_actions: []  # List of actions that are never allowed
+  notify_on_risky_actions: true
+
+# Reflection and self-improvement
+reflection:
+  enable_reflection: true
+  reflection_interval: 3600  # Every hour
+  reflection_after_n_tasks: 5  # Reflect after every 5 tasks
+  min_feedback_for_reflection: 3  # Minimum feedback entries needed for reflection
+  enable_error_reflection: true  # Reflect on errors
+  max_reflections_per_day: 10  # Limit reflections to avoid overthinking
+
+# Task scheduler
+task_scheduler:
+  max_concurrent_tasks: 3
+  default_handler: "default"
+  max_retries: 3  # Maximum retries for failed tasks
+  retry_delay_seconds: 300  # 5 minutes between retries
+  abandoned_task_timeout: 1800  # 30 minutes before declaring a task abandoned
+
+# Daily planning
+daily_planning:
+  enable: true
+  planning_time: "04:00"  # 4 AM
+  plan_days_ahead: 1
+  prioritize_critical_tasks: true
+  include_incomplete_tasks: true
+  learning_from_prev_day: true  # Learn from previous day's plan execution
+
+# Learning and adaptation
+learning:
+  enable_learning: true
+  update_profile_interval: 86400  # 1 day
+  personalization_weight: 0.8  # How strongly to personalize responses (0-1)
+  exploration_rate: 0.2  # Rate of trying new approaches (0-1)
+
+# Task handlers
+task_handlers:
+  # Example of custom handler configuration
+  # research:
+  #   path: "src.research.handlers.research_handler"
+  #   args:
+  #     max_depth: 3
+  #     use_cache: true
+
+# Memory and recall
+memory:
+  max_events: 10000  # Maximum number of events to keep in memory
+  relevance_threshold: 0.7  # Minimum relevance score for memory recall
+  recency_weight: 0.3  # Weight for recency in memory relevance (0-1)
+
+# Agent collaboration
+collaboration:
+  enable: true
+  agents:
+    - name: "researcher"
+      role: "Research information and find relevant data"
+      tool_access: ["web_search", "document_retrieval"]
+    - name: "analyzer"
+      role: "Analyze data and extract insights"
+      tool_access: ["data_analysis"]
+    - name: "planner"
+      role: "Create and refine plans"
+      tool_access: ["calendar", "task_management"]
+  
+  # How agents communicate and collaborate
+  communication_protocol: "sequential"  # sequential, parallel, or hierarchical
+  consensus_threshold: 0.7  # Minimum agreement level for multi-agent decisions
+
+# Monitoring
+monitoring:
+  enable_logging: true
+  log_level: "INFO"
+  performance_tracking: true
+  alert_thresholds:
+    error_rate: 0.2  # Alert if error rate exceeds 20%
+    task_completion_time: 300  # Alert if tasks take more than 5 minutes
+    memory_usage_mb: 1000  # Alert if memory usage exceeds 1GB 

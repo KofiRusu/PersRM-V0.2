@@ -1,0 +1,234 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Component {
+  id          String             @id @default(cuid())
+  name        String
+  description String?
+  code        String
+  sourceData  String
+  sourceType  String
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  versions    ComponentVersion[]
+  feedbacks   UserFeedback[]
+  tags        Tag[]              @relation("ComponentToTag")
+}
+
+model ComponentVersion {
+  id          String    @id @default(cuid())
+  code        String
+  createdAt   DateTime  @default(now())
+  componentId String
+  component   Component @relation(fields: [componentId], references: [id], onDelete: Cascade)
+}
+
+model Tag {
+  id         String      @id @default(cuid())
+  name       String      @unique
+  createdAt  DateTime    @default(now())
+  components Component[] @relation("ComponentToTag")
+}
+
+model UserFeedback {
+  id          String    @id @default(cuid())
+  rating      Int
+  comment     String?
+  createdAt   DateTime  @default(now())
+  componentId String
+  component   Component @relation(fields: [componentId], references: [id], onDelete: Cascade)
+}
+
+model ReasoningTestLog {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  prompt       String
+  code         String
+  model        String
+  score        Int
+  responseTime Int?
+  errorMessage String?
+  metadata     String?
+}
+
+model LearningLog {
+  id          String   @id @default(cuid())
+  taskId      String
+  component   String
+  input       String
+  output      String
+  result      String
+  feedback    String?
+  errorType   String?
+  remediation String?
+  metadata    String?
+  timestamp   DateTime @default(now())
+}
+
+model AssistantLog {
+  id        String   @id @default(cuid())
+  event     String
+  source    String
+  variant   String?
+  sessionId String?
+  duration  Int?
+  createdAt DateTime @default(now())
+  metadata  String?
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  eventType String
+  timestamp DateTime
+  sessionId String
+  metadata  String?
+  createdAt DateTime @default(now())
+
+  @@index([eventType])
+  @@index([sessionId])
+  @@index([timestamp])
+}
+
+model PromptTemplate {
+  id          String            @id
+  name        String
+  template    String
+  description String
+  category    String
+  version     Int
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  executions  PromptExecution[]
+
+  @@index([category])
+}
+
+model PromptExecution {
+  id               String         @id
+  promptTemplateId String
+  input            String
+  output           String
+  success          Boolean?
+  feedback         String?
+  feedbackDetails  String?
+  executionTime    Int
+  executedAt       DateTime
+  createdAt        DateTime       @default(now())
+  template         PromptTemplate @relation(fields: [promptTemplateId], references: [id])
+
+  @@index([promptTemplateId])
+  @@index([executedAt])
+  @@index([success])
+}
+
+// Plugin Enhancer Models
+
+model PluginEnhancerReport {
+  id                Int                    @id @default(autoincrement())
+  timestamp         DateTime               @default(now())
+  pluginCount       Int
+  okCount           Int
+  warningCount      Int
+  errorCount        Int
+  globalSuggestions GlobalSuggestion[]
+  analyses          PluginAnalysis[]
+  training          TrainingSession[]
+
+  @@map("plugin_enhancer_reports")
+}
+
+model GlobalSuggestion {
+  id           Int                  @id @default(autoincrement())
+  type         String
+  severity     String
+  message      String
+  details      String?
+  report       PluginEnhancerReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reportId     Int
+
+  @@map("global_suggestions")
+}
+
+model PluginAnalysis {
+  id           Int                  @id @default(autoincrement())
+  pluginId     String
+  pluginName   String?
+  status       String
+  initTime     Float?
+  renderTime   Float?
+  destroyTime  Float?
+  errorCount   Int?
+  report       PluginEnhancerReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  reportId     Int
+  suggestions  PluginSuggestion[]
+
+  @@map("plugin_analyses")
+}
+
+model PluginSuggestion {
+  id           Int            @id @default(autoincrement())
+  type         String
+  severity     String
+  message      String
+  details      String?
+  code         String?
+  analysis     PluginAnalysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  analysisId   Int
+
+  @@map("plugin_suggestions")
+}
+
+model ModelComparison {
+  id                      Int       @id @default(autoincrement())
+  pluginId                String
+  modelType               String
+  baselineInitTime        Float?
+  baselineRenderTime      Float?
+  baselineDestroyTime     Float?
+  comparisonInitTime      Float?
+  comparisonRenderTime    Float?
+  comparisonDestroyTime   Float?
+  initTimeImprovement     Float?
+  renderTimeImprovement   Float?
+  destroyTimeImprovement  Float?
+  timestamp               DateTime  @default(now())
+  trainingSession         TrainingSession? @relation(fields: [trainingSessionId], references: [id])
+  trainingSessionId       Int?
+
+  @@map("model_comparisons")
+}
+
+model TrainingSession {
+  id                Int                  @id @default(autoincrement())
+  startTime         DateTime             @default(now())
+  endTime           DateTime?
+  status            String               @default("running") // running, completed, failed
+  baselineModel     String
+  experimentalModel String
+  iterations        Int
+  report            PluginEnhancerReport @relation(fields: [reportId], references: [id])
+  reportId          Int
+  results           ModelComparison[]
+  learnings         TrainingLearning[]
+
+  @@map("training_sessions")
+}
+
+model TrainingLearning {
+  id                Int             @id @default(autoincrement())
+  category          String          // performance, memory, lifecycle, etc.
+  description       String
+  confidence        Float           // 0-1 scale
+  appliedToPlugins  String[]
+  trainingSession   TrainingSession @relation(fields: [trainingSessionId], references: [id], onDelete: Cascade)
+  trainingSessionId Int
+  timestamp         DateTime        @default(now())
+
+  @@map("training_learnings")
+}

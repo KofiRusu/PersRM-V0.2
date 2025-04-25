@@ -1,0 +1,52 @@
+FROM python:3.10-slim
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    TRANSFORMERS_CACHE=/app/cache \
+    HF_HOME=/app/cache \
+    USE_TORCH=1 \
+    USE_MKL=1 \
+    OMP_NUM_THREADS=4 \
+    MKL_NUM_THREADS=4
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    git \
+    curl \
+    wget \
+    ffmpeg \
+    libsndfile1 \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directories
+WORKDIR /app
+RUN mkdir -p /app/cache /app/models /app/data
+
+# Install base Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install CPU-optimized packages
+RUN pip install --no-cache-dir \
+    torch>=2.0.0 --index-url https://download.pytorch.org/whl/cpu \
+    llama-cpp-python \
+    ggml \
+    accelerate \
+    bitsandbytes-cpu \
+    optimum \
+    sentencepiece
+
+# Install PersLM package
+COPY . /app/
+RUN pip install -e /app
+
+# Expose API port
+EXPOSE 5000
+
+# Set default command
+ENTRYPOINT ["python", "-m", "perslm.serve.api"]
+CMD ["--model", "mistralai/Mistral-7B-Instruct-v0.2", "--port", "5000", "--quantization", "8bit", "--device", "cpu"] 

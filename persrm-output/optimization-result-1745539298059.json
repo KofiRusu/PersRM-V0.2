@@ -1,0 +1,79 @@
+{
+  "timestamp": 1745539298059,
+  "summary": {
+    "appName": "PersLM",
+    "overallScore": 77,
+    "maxScore": 100,
+    "issues": [
+      "issue-0",
+      "issue-1",
+      "issue-2",
+      "issue-3",
+      "issue-4"
+    ]
+  },
+  "issues": [
+    {
+      "id": "issue-0",
+      "title": "Optimization Issue 0",
+      "description": "This is a mock issue found during optimization",
+      "severity": "CRITICAL",
+      "component": "Component5"
+    },
+    {
+      "id": "issue-1",
+      "title": "Optimization Issue 1",
+      "description": "This is a mock issue found during optimization",
+      "severity": "INFO",
+      "component": "Component4"
+    },
+    {
+      "id": "issue-2",
+      "title": "Optimization Issue 2",
+      "description": "This is a mock issue found during optimization",
+      "severity": "ERROR",
+      "component": "Component4"
+    },
+    {
+      "id": "issue-3",
+      "title": "Optimization Issue 3",
+      "description": "This is a mock issue found during optimization",
+      "severity": "INFO",
+      "component": "Component5"
+    },
+    {
+      "id": "issue-4",
+      "title": "Optimization Issue 4",
+      "description": "This is a mock issue found during optimization",
+      "severity": "ERROR",
+      "component": "Component2"
+    }
+  ],
+  "suggestions": [
+    {
+      "id": "suggestion-0",
+      "description": "Suggestion 0: Improve component structure",
+      "impact": 40
+    },
+    {
+      "id": "suggestion-1",
+      "description": "Suggestion 1: Improve component structure",
+      "impact": 67
+    },
+    {
+      "id": "suggestion-2",
+      "description": "Suggestion 2: Improve component structure",
+      "impact": 88
+    },
+    {
+      "id": "suggestion-3",
+      "description": "Suggestion 3: Improve component structure",
+      "impact": 61
+    },
+    {
+      "id": "suggestion-4",
+      "description": "Suggestion 4: Improve component structure",
+      "impact": 22
+    }
+  ]
+}

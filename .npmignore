@@ -1,0 +1,37 @@
+# Source
+src/
+tsconfig.json
+.eslintrc.js
+jest.config.js
+*.log
+
+# Development files
+.vscode/
+.idea/
+.github/
+.git/
+
+# Build process
+.travis.yml
+.gitlab-ci.yml
+.github/workflows/
+
+# Tests
+**/*.test.ts
+**/*.spec.ts
+__tests__/
+test/
+coverage/
+
+# Misc
+.DS_Store
+.env
+.env.*
+.gitignore
+node_modules/
+examples/
+docs/
+scripts/
+tmp/
+.editorconfig
+.prettierrc 

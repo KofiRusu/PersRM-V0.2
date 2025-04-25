@@ -1,0 +1,42 @@
+{
+  "name": "PersRM Agent",
+  "entry": "src/agents/PersRM.ts",
+  "commands": [
+    {
+      "name": "analyze-project",
+      "description": "Run full UX analysis and component review",
+      "entry": "src/cli.ts",
+      "args": ["analyze"]
+    },
+    {
+      "name": "generate-report",
+      "description": "Create a UX report and export as HTML or Markdown",
+      "entry": "src/cli.ts",
+      "args": ["report"]
+    },
+    {
+      "name": "optimize-components",
+      "description": "Run component optimization and get enhancement suggestions",
+      "entry": "src/cli.ts",
+      "args": ["optimize"]
+    },
+    {
+      "name": "watch-components",
+      "description": "Watch for component changes and auto-optimize",
+      "entry": "src/agents/watch.ts"
+    }
+  ],
+  "config": {
+    "autoOptimize": false,
+    "watchPath": "./src/components",
+    "verbose": true,
+    "takeScreenshots": true,
+    "outputDir": "./persrm-output"
+  },
+  "ui": {
+    "window": "separate",
+    "dedicated": true,
+    "defaultOpen": true,
+    "theme": "dark"
+  }
+} 

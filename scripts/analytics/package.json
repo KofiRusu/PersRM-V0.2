@@ -1,0 +1,36 @@
+{
+  "name": "reasoning-analytics",
+  "version": "1.0.0",
+  "description": "Analytics and benchmarking suite for the Reasoning Assistant System",
+  "scripts": {
+    "benchmark": "node run-benchmarks.js",
+    "dashboard": "node generate-dashboard.js",
+    "report": "node generate-report.js",
+    "run-all": "sh run-all-analytics.sh",
+    "db:setup": "node ../db-setup.js"
+  },
+  "dependencies": {
+    "axios": "^1.5.0",
+    "chalk": "^4.1.2",
+    "cli-table": "^0.3.6",
+    "commander": "^11.0.0",
+    "csv-writer": "^1.6.0",
+    "date-fns": "^2.30.0",
+    "execa": "^7.2.0",
+    "fs-extra": "^11.2.0",
+    "handlebars": "^4.7.8",
+    "html-pdf": "^3.0.1",
+    "json2csv": "^6.0.0",
+    "lodash": "^4.17.21",
+    "marked": "^9.1.2",
+    "node-fetch": "^2.6.7",
+    "ora": "^7.1.1",
+    "puppeteer": "^21.3.8",
+    "shelljs": "^0.8.5",
+    "cross-env": "^7.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.0",
+    "@types/node": "^20.5.0"
+  }
+} 

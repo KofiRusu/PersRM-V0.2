@@ -1,0 +1,70 @@
+# PersLM Real-time Interaction Configuration
+
+# Model Settings
+model_path: null  # Path to model or model ID, null for fallback
+model_api_url: null  # URL for model API, e.g., "http://localhost:5000/api" (alternative to model_path)
+
+# User Settings
+user_id: "default_user"  # User ID for personalization
+
+# Speech-to-Text Configuration
+speech_to_text:
+  engine: "whisper"  # Options: whisper, speechrecognition
+  engine_config:
+    model_size: "tiny"  # Options: tiny, base, small, medium, large (whisper only)
+    language: "en"  # Language code, null for auto-detection (optional)
+    device: "auto"  # Options: cpu, cuda, auto (whisper only)
+    compute_type: "float16"  # Options: float32, float16, int8 (whisper only)
+    
+    # For speechrecognition engine only
+    backend: "google"  # Options: google, sphinx, wit, azure, etc.
+    api_key: null  # API key for paid services
+    
+  audio_config:
+    sample_rate: 16000
+    channels: 1
+    silence_threshold: 0.03  # Energy level below which is considered silence
+    silence_duration: 1.0  # Seconds of silence to end recording
+    max_duration: 30.0  # Maximum recording duration in seconds
+    device_index: null  # Audio input device index, null for default
+
+# Text-to-Speech Configuration
+text_to_speech:
+  engine: "pyttsx3"  # Options: pyttsx3, elevenlabs, gtts, macos
+  preferred_voice: null  # Preferred voice ID, null for default
+  
+  engine_options:
+    # For ElevenLabs only
+    api_key: null  # ElevenLabs API key
+    model_id: "eleven_monolingual_v1"
+    stability: 0.5  # 0.0 to 1.0
+    similarity_boost: 0.5  # 0.0 to 1.0
+    
+    # For gTTS only
+    slow: false  # Whether to speak slowly
+    
+  voice_config:
+    voice_id: ""  # Voice ID, empty for default
+    name: "default"  # Voice name
+    language: "en"  # Language code
+    gender: "neutral"  # Options: male, female, neutral
+    rate: 1.0  # Speech rate (1.0 = normal)
+    pitch: 1.0  # Speech pitch (1.0 = normal, not supported by all engines)
+    volume: 1.0  # Speech volume (1.0 = normal)
+
+# Interaction Settings
+interrupt_mode: "auto"  # Options: auto, manual, none
+output_dir: "output"  # Directory to save outputs
+save_transcripts: true  # Whether to save conversation transcripts
+save_recordings: false  # Whether to save audio recordings
+
+# Advanced Settings
+latency:
+  max_processing_time: 5.0  # Maximum time for model processing in seconds
+  response_chunk_size: 50  # Characters to speak at once for faster feedback
+
+# Voice Activity Detection
+vad:
+  enabled: true  # Whether to use voice activity detection
+  sensitivity: 3  # Sensitivity (1-3, higher = more sensitive)
+  speech_pad_ms: 400  # Silence padding after speech detected 
