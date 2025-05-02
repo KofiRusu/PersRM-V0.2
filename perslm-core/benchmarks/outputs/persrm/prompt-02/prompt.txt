@@ -1,0 +1,12 @@
+Create a hero section for a SaaS product called "DataVista" that helps businesses visualize complex data.
+
+The hero should include:
+- A headline that communicates the core value proposition
+- A supporting subheadline that explains benefits 
+- Two CTAs: "Start Free Trial" (primary) and "Watch Demo" (secondary)
+- A modern illustration or image placeholder on the right side
+- A small "Trusted by" logo section with 4-5 placeholder company logos
+
+The hero should be designed to capture attention, clearly communicate the product's value, and drive conversions. Make it responsive and ensure proper contrast for accessibility.
+
+Implement subtle animations or transitions that enhance the user experience without being distracting. 

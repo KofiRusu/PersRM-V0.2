@@ -1,0 +1,49 @@
+Create a contact form that allows users to send inquiries to a business. The form should:
+
+- Include the following fields:
+  * Full Name (required)
+  * Email Address (required, with validation)
+  * Phone Number (optional)
+  * Subject (dropdown with options: General Inquiry, Support, Sales, Partnership)
+  * Message (textarea, required, with character count)
+  * File attachment (optional, accept documents and images only, max size 5MB)
+  * Checkbox for subscribing to newsletter
+  * Checkbox for agreeing to privacy policy (required)
+
+- Validate inputs in real-time with helpful error messages
+- Show a loading state during submission (use a non-intrusive spinner with text feedback)
+- Display success and error states after submission
+- Be fully responsive on all devices (mobile-first approach)
+- Include proper labels and placeholder text
+
+Accessibility Requirements:
+- Implement proper semantic HTML5 structure (form, fieldset, legend as appropriate)
+- Include visible labels for all form controls (no placeholder-only labels)
+- Add specific ARIA attributes (aria-required, aria-describedby, aria-live for dynamic content)
+- Ensure 3:1 minimum contrast ratio for all text and form controls
+- Provide keyboard navigation with visible focus states
+- Implement error handling that works with screen readers (aria-invalid, error messages linked to fields)
+- Add skip navigation for screen reader users if the form is lengthy
+
+UX Polish Guidelines:
+- Implement progressive disclosure for complex fields (e.g., file upload with preview)
+- Add micro-interactions on focus, hover, and successful validation (subtle color changes, icons)
+- Use consistent spacing between form elements (recommend 16-24px vertical spacing)
+- Show inline validation with both color and icon indicators (not just red/green)
+- Implement auto-formatting for phone fields as user types
+- Design a multi-step submission flow if the form is lengthy
+- Clearly indicate required vs. optional fields (use "(optional)" text rather than asterisks)
+
+Expected Layout:
+- Single column layout on mobile for better focus and reduced cognitive load
+- Two-column layout option for desktop with logical grouping of related fields
+- Submit button should be full-width on mobile, appropriately sized on desktop
+- Error messages should appear directly below the relevant field
+- Success message should replace the form or appear as a prominent notification
+
+Reference Examples:
+- For form layout inspiration, see Stripe's contact form (https://stripe.com/contact) 
+- For accessibility implementation, reference Mailchimp's signup forms
+- For error handling, consider the pattern used by gov.uk forms
+
+The form should handle errors gracefully and guide users to correct any issues before submission. Consider implementing a "save draft" feature for complex forms to prevent data loss. 

@@ -5,6 +5,9 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // If you encounter "permission denied to create database" errors during migrations,
+  // uncomment the following line and add SHADOW_DATABASE_URL to your .env file
+  // shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Component {
@@ -231,4 +234,235 @@ model TrainingLearning {
   timestamp         DateTime        @default(now())
 
   @@map("training_learnings")
+}
+
+model User {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  name         String?
+  role         UserRole @default(USER)
+  hasOnboarded Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  feedback     BetaFeedback[]
+  campaigns    Campaign[]
+  comments     Comment[]
+  activities   TaskActivity[]
+  reminders    TaskReminder[]
+  moderatedComments Comment[] @relation("ModeratedBy")
+}
+
+model BetaFeedback {
+  id             String   @id @default(cuid())
+  rating         Int      // 1-5 star rating
+  feedback       String?  // Optional text feedback
+  featureInterest String[] // Array of features the user is interested in
+  createdAt      DateTime @default(now())
+  userId         String?
+  user           User?    @relation(fields: [userId], references: [id])
+}
+
+model Campaign {
+  id          String         @id @default(cuid())
+  name        String
+  description String?
+  status      CampaignStatus @default(DRAFT)
+  tags        String[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  userId      String
+  user        User           @relation(fields: [userId], references: [id])
+  items       CampaignItem[]
+}
+
+model CampaignItem {
+  id          String           @id @default(cuid())
+  title       String
+  description String?
+  type        CampaignItemType
+  status      ItemStatus       @default(SCHEDULED)
+  scheduledAt DateTime?
+  completedAt DateTime?
+  campaignId  String
+  campaign    Campaign         @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  // Content can be stored as JSON or in separate content-specific models
+  contentData String?          // JSON data for the content
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  ACTIVE
+  PAUSED
+  COMPLETED
+  ARCHIVED
+}
+
+enum CampaignItemType {
+  POST
+  DM
+  EMAIL
+  EXPERIMENT
+  TASK
+}
+
+enum ItemStatus {
+  SCHEDULED
+  ACTIVE
+  COMPLETED
+  FAILED
+}
+
+model Task {
+  id             String           @id @default(cuid())
+  title          String
+  description    String?
+  status         String           @default("PENDING")
+  priority       String           @default("MEDIUM")
+  dueDate        DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  userId         String
+  
+  // Existing relations
+  subtasks       Subtask[]
+  blockedBy      TaskDependency[] @relation("blocked")
+  blocking       TaskDependency[] @relation("blockers")
+  comments       Comment[]
+  attachments    TaskAttachment[]
+  activities     TaskActivity[]
+  reminders      TaskReminder[]
+  labels         TaskLabel[]
+  
+  // New recurrence relation
+  recurrence     TaskRecurrence?  @relation(fields: [recurrenceId], references: [id])
+  recurrenceId   String?
+  
+  // For public sharing
+  isPublic       Boolean          @default(false)
+  publicSlug     String?          @unique
+}
+
+model TaskRecurrence {
+  id             String     @id @default(cuid())
+  pattern        String     // DAILY | WEEKLY | MONTHLY | CUSTOM
+  interval       Int        // e.g. every 3 days
+  endsAt         DateTime?  // optional end date
+  createdAt      DateTime   @default(now())
+  tasks          Task[]
+}
+
+model Comment {
+  id          String            @id @default(cuid())
+  taskId      String
+  userId      String
+  content     String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  visibility  CommentVisibility @default(PUBLIC)
+  edited      Boolean           @default(false)
+  deleted     Boolean           @default(false) // soft delete
+  moderatedBy User?             @relation("ModeratedBy", fields: [moderatedById], references: [id])
+  moderatedById String?
+  moderationReason String?
+
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Subtask {
+  id          String   @id @default(cuid())
+  title       String
+  completed   Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  taskId      String
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model TaskDependency {
+  id              String   @id @default(cuid())
+  blockedTaskId   String
+  blockerTaskId   String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  blockedTask     Task     @relation("blocked", fields: [blockedTaskId], references: [id], onDelete: Cascade)
+  blockerTask     Task     @relation("blockers", fields: [blockerTaskId], references: [id], onDelete: Cascade)
+}
+
+model TaskAttachment {
+  id          String   @id @default(cuid())
+  fileName    String
+  fileType    String
+  fileSize    Int
+  fileUrl     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  taskId      String
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model TaskActivity {
+  id          String   @id @default(cuid())
+  type        String   // CREATED, UPDATED, COMMENT_ADDED, COMMENT_DELETED, STATUS_CHANGED, etc.
+  details     String?  // JSON string with additional details
+  createdAt   DateTime @default(now())
+  taskId      String
+  userId      String
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+enum ReminderMethod {
+  EMAIL
+  IN_APP
+}
+
+model TaskReminder {
+  id          String         @id @default(cuid())
+  taskId      String
+  userId      String
+  remindAt    DateTime
+  method      ReminderMethod @default(IN_APP)
+  message     String?
+  sent        Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+  task        Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user        User           @relation(fields: [userId], references: [id])
+}
+
+model TaskLabel {
+  id        String   @id @default(cuid())
+  taskId    String
+  labelId   String
+  createdAt DateTime @default(now())
+  
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  label     Label    @relation(fields: [labelId], references: [id], onDelete: Cascade)
+}
+
+model Label {
+  id          String       @id @default(cuid())
+  name        String
+  color       String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  taskLabels  TaskLabel[]
+}
+
+enum CommentVisibility {
+  PUBLIC
+  PRIVATE
+  HIDDEN
+}
+
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
 }

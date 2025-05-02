@@ -1,5 +1,5 @@
-import OpenAI from 'openai';
-import { env } from '@/env.mjs';
+import OpenAI from "openai";
+import { env } from "@/env.mjs";
 
 // Initialize OpenAI client if API key is available
 let openaiClient: OpenAI | null = null;
@@ -15,7 +15,7 @@ export function getOpenAIClient(): OpenAI | null {
 
   // If no API key, return null
   if (!apiKey) {
-    console.warn('OpenAI API key not found');
+    console.warn("OpenAI API key not found");
     return null;
   }
 
@@ -27,7 +27,7 @@ export function getOpenAIClient(): OpenAI | null {
     });
     return openaiClient;
   } catch (error) {
-    console.error('Error initializing OpenAI client:', error);
+    console.error("Error initializing OpenAI client:", error);
     return null;
   }
 }
@@ -40,12 +40,12 @@ function getOpenAIApiKey(): string | undefined {
   }
 
   // Then try localStorage (for client-side usage)
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('openai_api_key') || undefined;
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("openai_api_key") || undefined;
   }
 
   return undefined;
 }
 
 // Export the client for direct usage
-export const openai = getOpenAIClient(); 
+export const openai = getOpenAIClient();

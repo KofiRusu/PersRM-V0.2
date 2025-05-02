@@ -1,4 +1,4 @@
-import { extractStructuredResponse } from '../app/api/reasoning/utils';
+import { extractStructuredResponse } from "../app/api/reasoning/utils";
 
 // Mock reasoning response for testing
 const mockReasoning = `
@@ -33,33 +33,39 @@ Example 1: Some website does this well
 Example 2: Another implementation to consider
 `;
 
-describe('Reasoning API Utilities', () => {
-  test('extractStructuredResponse parses reasoning sections correctly', () => {
+describe("Reasoning API Utilities", () => {
+  test("extractStructuredResponse parses reasoning sections correctly", () => {
     const result = extractStructuredResponse(mockReasoning);
-    
+
     // Check if all sections are extracted
-    expect(result.analysis).toContain('test analysis section');
+    expect(result.analysis).toContain("test analysis section");
     expect(result.approaches).toHaveLength(3);
     expect(result.bestPractices).toHaveLength(3);
     expect(result.accessibility).toHaveLength(3);
-    expect(result.implementation).toContain('implementation guidance');
-    expect(result.examples).toContain('Example 1');
+    expect(result.implementation).toContain("implementation guidance");
+    expect(result.examples).toContain("Example 1");
   });
-  
-  test('extractStructuredResponse handles missing sections gracefully', () => {
+
+  test("extractStructuredResponse handles missing sections gracefully", () => {
     const incompleteReasoning = `
 ## Analysis
 Just an analysis with no other sections
     `;
-    
+
     const result = extractStructuredResponse(incompleteReasoning);
-    
+
     // Check if defaults are used for missing sections
-    expect(result.analysis).toContain('Just an analysis');
-    expect(result.approaches).toEqual(['No approaches could be extracted.']);
-    expect(result.bestPractices).toEqual(['No best practices could be extracted.']);
-    expect(result.accessibility).toEqual(['No accessibility considerations could be extracted.']);
-    expect(result.implementation).toBe('No implementation details could be extracted.');
-    expect(result.examples).toBe('No examples could be extracted.');
+    expect(result.analysis).toContain("Just an analysis");
+    expect(result.approaches).toEqual(["No approaches could be extracted."]);
+    expect(result.bestPractices).toEqual([
+      "No best practices could be extracted.",
+    ]);
+    expect(result.accessibility).toEqual([
+      "No accessibility considerations could be extracted.",
+    ]);
+    expect(result.implementation).toBe(
+      "No implementation details could be extracted.",
+    );
+    expect(result.examples).toBe("No examples could be extracted.");
   });
-}); 
+});

@@ -1,4 +1,4 @@
-import { RetentionService } from './retentionService';
+import { RetentionService } from "./retentionService";
 
 export interface UiPerformanceMetric {
   name: string;
@@ -8,7 +8,7 @@ export interface UiPerformanceMetric {
 }
 
 export interface AnimationMetric {
-  variant: string; 
+  variant: string;
   smoothness: number; // 0-1 score based on frame rate
   frameDrops: number;
   startTime: number;
@@ -42,7 +42,8 @@ class BenchmarkService {
   private apiLatencies: UiPerformanceMetric[] = [];
   private currentMeasurements: Map<string, number> = new Map();
   private rafCallbacks: Map<string, number> = new Map();
-  private frameData: Map<string, { timestamps: number[], drops: number }> = new Map();
+  private frameData: Map<string, { timestamps: number[]; drops: number }> =
+    new Map();
 
   constructor() {
     this.retentionService = new RetentionService();
@@ -58,7 +59,10 @@ class BenchmarkService {
   /**
    * End measuring a UI operation and record the metric
    */
-  endMeasure(name: string, category: 'ui' | 'api' = 'ui'): UiPerformanceMetric | null {
+  endMeasure(
+    name: string,
+    category: "ui" | "api" = "ui",
+  ): UiPerformanceMetric | null {
     const startTime = this.currentMeasurements.get(name);
     if (startTime === undefined) {
       console.warn(`No measurement started for "${name}"`);
@@ -72,20 +76,20 @@ class BenchmarkService {
       name,
       startTime,
       endTime,
-      duration
+      duration,
     };
 
-    if (category === 'ui') {
+    if (category === "ui") {
       this.uiMetrics.push(metric);
     } else {
       this.apiLatencies.push(metric);
     }
 
     this.currentMeasurements.delete(name);
-    this.retentionService.trackEvent('benchmark', {
+    this.retentionService.trackEvent("benchmark", {
       metricName: name,
       duration,
-      category
+      category,
     });
 
     return metric;
@@ -96,9 +100,9 @@ class BenchmarkService {
    */
   startAnimationMeasurement(animationId: string, variant: string): void {
     // Reset frame data
-    this.frameData.set(animationId, { 
+    this.frameData.set(animationId, {
       timestamps: [],
-      drops: 0
+      drops: 0,
     });
 
     // Start tracking frames
@@ -112,8 +116,9 @@ class BenchmarkService {
       // Check for dropped frames (assuming 60fps as target)
       if (frameInfo.timestamps.length >= 2) {
         const lastIndex = frameInfo.timestamps.length - 1;
-        const timeDiff = frameInfo.timestamps[lastIndex] - frameInfo.timestamps[lastIndex - 1];
-        
+        const timeDiff =
+          frameInfo.timestamps[lastIndex] - frameInfo.timestamps[lastIndex - 1];
+
         // If frame took longer than 20ms (50fps), count it as a frame drop
         if (timeDiff > 20) {
           // Calculate how many frames were dropped
@@ -138,7 +143,10 @@ class BenchmarkService {
   /**
    * End animation measurement and calculate metrics
    */
-  endAnimationMeasurement(animationId: string, variant: string): AnimationMetric | null {
+  endAnimationMeasurement(
+    animationId: string,
+    variant: string,
+  ): AnimationMetric | null {
     // Stop animation frame callback
     const rafId = this.rafCallbacks.get(animationId);
     if (rafId) {
@@ -156,16 +164,21 @@ class BenchmarkService {
 
     // Calculate smoothness (1 = perfect, lower = worse)
     const { timestamps, drops } = frameInfo;
-    const totalExpectedFrames = Math.ceil((metric.endTime - metric.startTime) / 16.67);
+    const totalExpectedFrames = Math.ceil(
+      (metric.endTime - metric.startTime) / 16.67,
+    );
     const actualFrames = timestamps.length;
-    const smoothness = Math.max(0, Math.min(1, 1 - (drops / totalExpectedFrames)));
+    const smoothness = Math.max(
+      0,
+      Math.min(1, 1 - drops / totalExpectedFrames),
+    );
 
     const animationMetric: AnimationMetric = {
       variant,
       smoothness,
       frameDrops: drops,
       startTime: metric.startTime,
-      endTime: metric.endTime
+      endTime: metric.endTime,
     };
 
     this.animationMetrics.push(animationMetric);
@@ -174,12 +187,12 @@ class BenchmarkService {
     this.frameData.delete(animationId);
 
     // Track animation metric
-    this.retentionService.trackEvent('animation-benchmark', {
+    this.retentionService.trackEvent("animation-benchmark", {
       animationId,
       variant,
       smoothness,
       frameDrops: drops,
-      duration: metric.duration
+      duration: metric.duration,
     });
 
     return animationMetric;
@@ -191,24 +204,32 @@ class BenchmarkService {
   generateBenchmarkSummary(): BenchmarkSummary {
     // Calculate averages
     const assistantOpenTimes = this.uiMetrics
-      .filter(metric => metric.name.includes('assistant-open'))
-      .map(metric => metric.duration);
-    
+      .filter((metric) => metric.name.includes("assistant-open"))
+      .map((metric) => metric.duration);
+
     const reasoningTimes = this.apiLatencies
-      .filter(metric => metric.name.includes('reasoning-api'))
-      .map(metric => metric.duration);
-    
-    const averageAssistantOpenTime = assistantOpenTimes.length > 0
-      ? assistantOpenTimes.reduce((sum, time) => sum + time, 0) / assistantOpenTimes.length
-      : 0;
-    
-    const averageReasoningTime = reasoningTimes.length > 0
-      ? reasoningTimes.reduce((sum, time) => sum + time, 0) / reasoningTimes.length
-      : 0;
-    
-    const averageAnimationSmoothness = this.animationMetrics.length > 0
-      ? this.animationMetrics.reduce((sum, metric) => sum + metric.smoothness, 0) / this.animationMetrics.length
-      : 0;
+      .filter((metric) => metric.name.includes("reasoning-api"))
+      .map((metric) => metric.duration);
+
+    const averageAssistantOpenTime =
+      assistantOpenTimes.length > 0
+        ? assistantOpenTimes.reduce((sum, time) => sum + time, 0) /
+          assistantOpenTimes.length
+        : 0;
+
+    const averageReasoningTime =
+      reasoningTimes.length > 0
+        ? reasoningTimes.reduce((sum, time) => sum + time, 0) /
+          reasoningTimes.length
+        : 0;
+
+    const averageAnimationSmoothness =
+      this.animationMetrics.length > 0
+        ? this.animationMetrics.reduce(
+            (sum, metric) => sum + metric.smoothness,
+            0,
+          ) / this.animationMetrics.length
+        : 0;
 
     // Create summary
     const summary: BenchmarkSummary = {
@@ -217,27 +238,30 @@ class BenchmarkService {
         userAgent: navigator.userAgent,
         screenSize: `${window.screen.width}x${window.screen.height}`,
         devicePixelRatio: window.devicePixelRatio,
-        platform: navigator.platform
+        platform: navigator.platform,
       },
       metrics: {
         uiPerformance: [...this.uiMetrics],
         animations: [...this.animationMetrics],
-        apiLatencies: [...this.apiLatencies]
+        apiLatencies: [...this.apiLatencies],
       },
       averages: {
         assistantOpenTime: averageAssistantOpenTime,
         reasoningResponseTime: averageReasoningTime,
-        animationSmoothness: averageAnimationSmoothness
-      }
+        animationSmoothness: averageAnimationSmoothness,
+      },
     };
 
     // Log summary to retention service
-    this.retentionService.trackEvent('benchmark-summary', {
+    this.retentionService.trackEvent("benchmark-summary", {
       timestamp: summary.timestamp,
       averageAssistantOpenTime,
       averageReasoningTime,
       averageAnimationSmoothness,
-      totalMetrics: this.uiMetrics.length + this.animationMetrics.length + this.apiLatencies.length
+      totalMetrics:
+        this.uiMetrics.length +
+        this.animationMetrics.length +
+        this.apiLatencies.length,
     });
 
     return summary;
@@ -259,13 +283,13 @@ class BenchmarkService {
     this.animationMetrics = [];
     this.apiLatencies = [];
     this.currentMeasurements.clear();
-    
+
     // Cancel any ongoing animation measurements
-    this.rafCallbacks.forEach(rafId => cancelAnimationFrame(rafId));
+    this.rafCallbacks.forEach((rafId) => cancelAnimationFrame(rafId));
     this.rafCallbacks.clear();
     this.frameData.clear();
   }
 }
 
 // Export singleton instance
-export const benchmarkService = new BenchmarkService(); 
+export const benchmarkService = new BenchmarkService();

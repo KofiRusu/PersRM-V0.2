@@ -1,0 +1,23 @@
+Design a comprehensive supply chain management system with the following features:
+
+- Real-time inventory tracking across multiple warehouses and locations
+- Demand forecasting using historical data and machine learning algorithms
+- Automated purchase order generation based on inventory levels and lead times
+- Supplier management portal with performance metrics and evaluation tools
+- Barcode/RFID scanning integration for rapid inventory updates
+- Route optimization for shipping and distribution logistics
+- Quality control check-points and defect tracking systems
+- Batch and lot tracking with full chain of custody documentation
+- Returns processing and warranty claim management
+- Environmental impact tracking and sustainability metrics
+- Cost analysis and margin optimization tools
+- Integration with ERP and accounting systems
+- Mobile applications for warehouse staff and delivery personnel
+- Customizable alerts and notifications for inventory events
+- Blockchain-based verification for high-value or regulated goods
+- Multi-currency and multi-language support for global operations
+- Detailed reporting dashboard with customizable KPIs
+- API connections to major shipping carriers and logistics providers
+- Contingency planning tools for supply chain disruptions
+
+The system should provide both strategic planning capabilities and day-to-day operational support while maintaining data integrity and offering scalability for businesses of various sizes. 

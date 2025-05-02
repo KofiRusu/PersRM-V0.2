@@ -1,0 +1,70 @@
+[
+  {
+    "promptId": "04",
+    "componentName": "contact-form",
+    "currentScore": {
+      "fidelity": 3,
+      "codeQuality": 4,
+      "accessibility": 1,
+      "uxPolish": 2,
+      "innovation": 2,
+      "total": 12
+    },
+    "weakestAreas": ["accessibility", "uxPolish", "innovation"],
+    "suggestedStrategies": [
+      {
+        "name": "AddAccessibility",
+        "description": "Enhance the prompt with explicit accessibility requirements including ARIA labels, keyboard navigation patterns, and focus management",
+        "rationale": "The component scored only 1/5 on accessibility, making it the most critical area for improvement"
+      },
+      {
+        "name": "AddUXGuidelines",
+        "description": "Add detailed UX guidelines including loading states, validation feedback, and responsive behavior expectations",
+        "rationale": "The component needs more polish in user experience, particularly around form interaction patterns"
+      },
+      {
+        "name": "AddExamples",
+        "description": "Add concrete examples of expected form layouts, validation patterns, and error handling",
+        "rationale": "Providing examples will help improve fidelity and innovation in implementation"
+      }
+    ],
+    "expectedImprovementRange": {
+      "min": 5,
+      "max": 8
+    }
+  },
+  {
+    "promptId": "02",
+    "componentName": "hero-section",
+    "currentScore": {
+      "fidelity": 4,
+      "codeQuality": 3,
+      "accessibility": 2,
+      "uxPolish": 2,
+      "innovation": 1,
+      "total": 12
+    },
+    "weakestAreas": ["innovation", "accessibility", "uxPolish"],
+    "suggestedStrategies": [
+      {
+        "name": "IncreaseCreativity",
+        "description": "Encourage more creative and innovative approaches with examples of unique hero sections",
+        "rationale": "Innovation scored lowest at 1/5, showing need for more creative direction"
+      },
+      {
+        "name": "AddAccessibility",
+        "description": "Add specific accessibility requirements for hero sections, including semantic markup and screen reader support",
+        "rationale": "Accessibility scored 2/5 and needs significant improvement"
+      },
+      {
+        "name": "EnhanceWithVisualDesign",
+        "description": "Provide more detailed visual design direction including animation specifications, transitions, and micro-interactions",
+        "rationale": "UX Polish scored 2/5 and would benefit from more specific design guidance"
+      }
+    ],
+    "expectedImprovementRange": {
+      "min": 4,
+      "max": 7
+    }
+  }
+] 

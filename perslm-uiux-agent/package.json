@@ -1,0 +1,28 @@
+{
+  "name": "perslm-uiux-agent",
+  "version": "0.1.0",
+  "description": "UI/UX reasoning model for PersLM",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "next": "^13.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "perslm-core": "file:../perslm-core",
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/node": "^18.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0"
+  }
+} 

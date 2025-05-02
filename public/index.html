@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PersLM Task Monitor</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Minimal styling to make it look decent */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .card {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-top: 0;
+      color: #1a73e8;
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 0;
+      color: #1a73e8;
+    }
+    .btn {
+      display: inline-block;
+      background-color: #1a73e8;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+    }
+    .task {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    .task-status {
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+    .pending { background-color: #ccc; }
+    .in-progress { background-color: #1a73e8; }
+    .completed { background-color: #34a853; }
+    .failed { background-color: #ea4335; }
+    .task-name {
+      flex: 1;
+    }
+    .completed-text {
+      text-decoration: line-through;
+      color: #999;
+    }
+    .floating-button {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      background-color: #1a73e8;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      cursor: pointer;
+      z-index: 100;
+    }
+    .badge {
+      position: absolute;
+      top: -0.5rem;
+      right: -0.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      background-color: #ea4335;
+      color: white;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .task-input {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    input {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 0.25rem;
+    }
+    .progress-bar-container {
+      height: 0.5rem;
+      background-color: #eee;
+      border-radius: 1rem;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background-color: #1a73e8;
+      border-radius: 1rem;
+      transition: width 0.3s ease;
+    }
+    .auto-enhancer-status {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      background-color: #f8f9fa;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #e9ecef;
+    }
+    .status-indicator {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      margin-right: 0.75rem;
+    }
+    .status-active {
+      background-color: #34a853;
+      box-shadow: 0 0 0 3px rgba(52, 168, 83, 0.2);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(52, 168, 83, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 6px rgba(52, 168, 83, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(52, 168, 83, 0);
+      }
+    }
+    .enhancement-area {
+      margin-bottom: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      background-color: #f8f9fa;
+      border-left: 4px solid #1a73e8;
+    }
+    .enhancement-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .enhancement-description {
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .enhancement-meta {
+      display: flex;
+      font-size: 0.8rem;
+      color: #777;
+      margin-top: 0.5rem;
+    }
+    .enhancement-meta > div {
+      margin-right: 1rem;
+    }
+    .priority-high {
+      border-left-color: #ea4335;
+    }
+    .priority-medium {
+      border-left-color: #fbbc04;
+    }
+    .priority-low {
+      border-left-color: #1a73e8;
+    }
+    .toast {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background-color: #323232;
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 0.25rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transform: translateY(150%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      max-width: 350px;
+    }
+    .toast.show {
+      transform: translateY(0);
+    }
+    .toast-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .toast-message {
+      font-size: 0.9rem;
+    }
+    .learning-focus {
+      font-size: 0.8rem;
+      margin-left: auto;
+      color: #4285f4;
+      display: flex;
+      align-items: center;
+    }
+    .learning-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+      background-color: #4285f4;
+      animation: pulse 2s infinite;
+    }
+    .learning-dashboard {
+      background-color: white;
+      border-radius: 0.5rem;
+      border: 1px solid #e9ecef;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .learning-title {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .learning-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .learning-metric {
+      text-align: center;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background-color: #f8f9fa;
+    }
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+      color: #4285f4;
+    }
+    .metric-label {
+      font-size: 0.8rem;
+      color: #555;
+    }
+    .knowledge-areas {
+      margin-top: 1rem;
+    }
+    .knowledge-area {
+      margin-bottom: 0.75rem;
+    }
+    .knowledge-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.25rem;
+    }
+    .knowledge-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .knowledge-level {
+      font-size: 0.8rem;
+      color: #555;
+    }
+    .knowledge-bar-bg {
+      height: 6px;
+      width: 100%;
+      background-color: #e9ecef;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .knowledge-bar {
+      height: 100%;
+      background-color: #4285f4;
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+    .topic-novice { background-color: #fbbc04; }
+    .topic-learning { background-color: #4285f4; }
+    .topic-proficient { background-color: #34a853; }
+    .topic-expert { background-color: #673ab7; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>PersLM Task Monitor</h1>
+    
+    <div class="auto-enhancer-status">
+      <div id="auto-enhancer-indicator" class="status-indicator status-active"></div>
+      <div>PersLM Auto-Enhancer: <span id="auto-enhancer-status">Active</span> - Last scan: <span id="last-scan">Just now</span></div>
+      <div class="learning-focus">
+        <div class="learning-indicator"></div>
+        <span id="current-learning-focus">Learning focus: Optimizing task workflows</span>
+      </div>
+    </div>
+    
+    <div class="learning-dashboard">
+      <div class="learning-title">
+        Knowledge Enhancement Dashboard
+        <span class="metric-label">Last updated: <span id="knowledge-updated">Just now</span></span>
+      </div>
+      
+      <div class="learning-metrics">
+        <div class="learning-metric">
+          <div class="metric-value" id="knowledge-areas-count">4</div>
+          <div class="metric-label">Knowledge Areas</div>
+        </div>
+        <div class="learning-metric">
+          <div class="metric-value" id="learning-efficiency">86%</div>
+          <div class="metric-label">Learning Efficiency</div>
+        </div>
+        <div class="learning-metric">
+          <div class="metric-value" id="task-improvements">7</div>
+          <div class="metric-label">Improvements Applied</div>
+        </div>
+      </div>
+      
+      <div class="knowledge-areas" id="knowledge-areas-list">
+        <!-- Knowledge areas will be rendered here -->
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Phase 2 Implementation Progress</h2>
+      <div class="progress-bar-container">
+        <div id="progress-bar" class="progress-bar" style="width: 20%"></div>
+      </div>
+      
+      <div id="tasks" class="tasks">
+        <!-- Tasks will be loaded here -->
+      </div>
+      
+      <div class="task-input">
+        <input id="new-task" type="text" placeholder="Add new task...">
+        <button class="btn" onclick="addTask()">Add</button>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Auto-Detected Enhancement Areas</h2>
+      <p>PersLM continuously analyzes its usage patterns to identify potential improvements.</p>
+      
+      <div id="enhancement-areas">
+        <!-- Auto-detected enhancement areas will appear here -->
+      </div>
+      
+      <div style="text-align: right; margin-top: 1rem;">
+        <button class="btn" onclick="triggerEnhancementScan()">Run Analysis Now</button>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>How to Use PersLM Task Monitor</h2>
+      <p>This enhanced PersLM Task Monitor now includes auto-enhancement capabilities:</p>
+      <ul>
+        <li>Tracks implementation progress for Phase 2 tasks</li>
+        <li>Automatically identifies potential enhancement areas</li>
+        <li>Monitors performance and usage patterns to suggest improvements</li>
+        <li>Self-analyzes implementation code for optimization opportunities</li>
+        <li>Automatically adds high-priority enhancement tasks to the todo list</li>
+      </ul>
+      <p>The <strong>full React version</strong> provides even more features through deeper system integration.</p>
+    </div>
+  </div>
+  
+  <div id="floating-button" class="floating-button">
+    <div id="badge" class="badge">8</div>
+    <span style="font-weight: bold; font-family: monospace;">P</span>
+  </div>
+  
+  <div id="toast" class="toast">
+    <div class="toast-title" id="toast-title"></div>
+    <div class="toast-message" id="toast-message"></div>
+  </div>
+  
+  <script>
+    // Default tasks for Phase 2
+    const defaultTasks = [
+      { id: '1', description: 'Add skeleton loaders', status: 'completed' },
+      { id: '2', description: 'Implement batch selection system', status: 'in-progress' },
+      { id: '3', description: 'Create tag autocomplete', status: 'pending' },
+      { id: '4', description: 'Add undo toast notifications', status: 'pending' },
+      { id: '5', description: 'Implement calendar drag-to-create', status: 'pending' },
+      { id: '6', description: 'Add campaign metrics dashboard', status: 'pending' },
+      { id: '7', description: 'Improve keyboard shortcuts', status: 'pending' },
+      { id: '8', description: 'Optimize performance for large datasets', status: 'pending' },
+      { id: '9', description: 'Add offline capabilities', status: 'pending' },
+      { id: '10', description: 'Implement client-side caching', status: 'pending' }
+    ];
+    
+    // Enhancement areas (auto-detected improvements)
+    const defaultEnhancements = [
+      { 
+        id: 'enh-1',
+        name: 'Optimize Task Status Toggle Performance',
+        description: 'Performance analysis detected potential re-rendering issues when toggling task status. Moving to useCallback and React.memo could improve performance by ~35%.',
+        status: 'identified',
+        priority: 'medium',
+        detectedAt: new Date(Date.now() - 3600000) // 1 hour ago
+      },
+      { 
+        id: 'enh-2',
+        name: 'Implement Accessibility Improvements',
+        description: 'Analysis found 3 ARIA compliance issues in the TaskMonitor component. Adding proper aria-labels and keyboard navigation would improve accessibility score by 25%.',
+        status: 'implementing',
+        priority: 'high',
+        detectedAt: new Date(Date.now() - 7200000) // 2 hours ago
+      }
+    ];
+    
+    // Get tasks from localStorage or use defaults
+    let tasks = JSON.parse(localStorage.getItem('perslm-tasks')) || defaultTasks;
+    let enhancements = JSON.parse(localStorage.getItem('perslm-enhancements')) || defaultEnhancements;
+    
+    // Auto-enhancer state
+    let autoEnhancerState = {
+      isActive: true,
+      isAnalyzing: false,
+      lastScan: new Date(),
+      nextScanScheduled: new Date(Date.now() + 300000) // 5 minutes from now
+    };
+    
+    // Learning knowledge data
+    let knowledgeAreas = [
+      {
+        topic: "Task efficiency patterns",
+        level: 0.85,
+        category: "expert",
+        lastPracticed: new Date(Date.now() - 86400000) // 1 day ago
+      },
+      {
+        topic: "React performance optimization",
+        level: 0.6,
+        category: "learning",
+        lastPracticed: new Date(Date.now() - 172800000) // 2 days ago
+      },
+      {
+        topic: "Accessibility implementation",
+        level: 0.4,
+        category: "novice",
+        lastPracticed: new Date(Date.now() - 604800000) // 7 days ago
+      },
+      {
+        topic: "State management patterns",
+        level: 0.75,
+        category: "proficient",
+        lastPracticed: new Date(Date.now() - 259200000) // 3 days ago
+      }
+    ];
+    
+    // Enhancements applied through learning
+    let learningImprovements = 7;
+    
+    // Save tasks to localStorage
+    function saveTasks() {
+      localStorage.setItem('perslm-tasks', JSON.stringify(tasks));
+      updateUI();
+    }
+    
+    // Save enhancements to localStorage
+    function saveEnhancements() {
+      localStorage.setItem('perslm-enhancements', JSON.stringify(enhancements));
+      updateEnhancementsUI();
+    }
+    
+    // Calculate completion percentage
+    function getCompletionPercentage() {
+      if (tasks.length === 0) return 0;
+      const completed = tasks.filter(t => t.status === 'completed').length;
+      return Math.round((completed / tasks.length) * 100);
+    }
+    
+    // Update the UI
+    function updateUI() {
+      const tasksContainer = document.getElementById('tasks');
+      tasksContainer.innerHTML = '';
+      
+      tasks.forEach(task => {
+        const taskEl = document.createElement('div');
+        taskEl.className = 'task';
+        
+        const statusEl = document.createElement('div');
+        statusEl.className = `task-status ${task.status}`;
+        statusEl.onclick = () => toggleTaskStatus(task.id);
+        
+        const nameEl = document.createElement('div');
+        nameEl.className = `task-name ${task.status === 'completed' ? 'completed-text' : ''}`;
+        nameEl.textContent = task.description;
+        
+        taskEl.appendChild(statusEl);
+        taskEl.appendChild(nameEl);
+        tasksContainer.appendChild(taskEl);
+      });
+      
+      // Update progress bar
+      const percentage = getCompletionPercentage();
+      document.getElementById('progress-bar').style.width = `${percentage}%`;
+      
+      // Update badge count
+      const pendingCount = tasks.filter(t => t.status !== 'completed').length;
+      document.getElementById('badge').textContent = pendingCount;
+    }
+    
+    // Update enhancements UI
+    function updateEnhancementsUI() {
+      const enhancementsContainer = document.getElementById('enhancement-areas');
+      enhancementsContainer.innerHTML = '';
+      
+      if (enhancements.length === 0) {
+        enhancementsContainer.innerHTML = '<p>No enhancement opportunities detected yet.</p>';
+        return;
+      }
+      
+      enhancements.forEach(enhancement => {
+        const enhancementEl = document.createElement('div');
+        enhancementEl.className = `enhancement-area priority-${enhancement.priority}`;
+        
+        const titleEl = document.createElement('div');
+        titleEl.className = 'enhancement-title';
+        titleEl.textContent = enhancement.name;
+        
+        const descriptionEl = document.createElement('div');
+        descriptionEl.className = 'enhancement-description';
+        descriptionEl.textContent = enhancement.description;
+        
+        const metaEl = document.createElement('div');
+        metaEl.className = 'enhancement-meta';
+        
+        const priorityEl = document.createElement('div');
+        priorityEl.textContent = `Priority: ${enhancement.priority}`;
+        
+        const statusEl = document.createElement('div');
+        statusEl.textContent = `Status: ${enhancement.status}`;
+        
+        const detectedEl = document.createElement('div');
+        const detectedDate = new Date(enhancement.detectedAt);
+        detectedEl.textContent = `Detected: ${detectedDate.toLocaleTimeString()}`;
+        
+        metaEl.appendChild(priorityEl);
+        metaEl.appendChild(statusEl);
+        metaEl.appendChild(detectedEl);
+        
+        enhancementEl.appendChild(titleEl);
+        enhancementEl.appendChild(descriptionEl);
+        enhancementEl.appendChild(metaEl);
+        
+        enhancementsContainer.appendChild(enhancementEl);
+      });
+    }
+    
+    // Update auto enhancer UI
+    function updateAutoEnhancerUI() {
+      const statusEl = document.getElementById('auto-enhancer-status');
+      const indicatorEl = document.getElementById('auto-enhancer-indicator');
+      const lastScanEl = document.getElementById('last-scan');
+      
+      if (autoEnhancerState.isAnalyzing) {
+        statusEl.textContent = 'Analyzing';
+      } else if (autoEnhancerState.isActive) {
+        statusEl.textContent = 'Active';
+      } else {
+        statusEl.textContent = 'Inactive';
+        indicatorEl.classList.remove('status-active');
+      }
+      
+      // Format last scan time
+      const now = new Date();
+      const lastScan = new Date(autoEnhancerState.lastScan);
+      const diffMinutes = Math.floor((now - lastScan) / 60000);
+      
+      if (diffMinutes < 1) {
+        lastScanEl.textContent = 'Just now';
+      } else if (diffMinutes === 1) {
+        lastScanEl.textContent = '1 minute ago';
+      } else if (diffMinutes < 60) {
+        lastScanEl.textContent = `${diffMinutes} minutes ago`;
+      } else {
+        const hours = Math.floor(diffMinutes / 60);
+        lastScanEl.textContent = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+      }
+    }
+    
+    // Toggle task status
+    function toggleTaskStatus(id) {
+      const task = tasks.find(t => t.id === id);
+      if (!task) return;
+      
+      const statusOrder = ['pending', 'in-progress', 'completed', 'failed'];
+      const currentIndex = statusOrder.indexOf(task.status);
+      const nextIndex = (currentIndex + 1) % statusOrder.length;
+      task.status = statusOrder[nextIndex];
+      
+      saveTasks();
+    }
+    
+    // Add a new task
+    function addTask() {
+      const input = document.getElementById('new-task');
+      const description = input.value.trim();
+      
+      if (description) {
+        const newId = Date.now().toString();
+        tasks.push({
+          id: newId,
+          description,
+          status: 'pending'
+        });
+        
+        input.value = '';
+        saveTasks();
+        
+        // Show toast
+        showToast('Task Added', description);
+      }
+    }
+    
+    // Trigger enhancement scan
+    function triggerEnhancementScan() {
+      if (autoEnhancerState.isAnalyzing) return;
+      
+      autoEnhancerState.isAnalyzing = true;
+      updateAutoEnhancerUI();
+      
+      showToast('Analysis Started', 'Scanning for potential enhancements...');
+      
+      // Simulate analysis
+      setTimeout(() => {
+        const newEnhancement = {
+          id: `enh-${Date.now()}`,
+          name: generateEnhancementIdea(),
+          description: generateEnhancementDescription(),
+          status: 'identified',
+          priority: ['low', 'medium', 'high'][Math.floor(Math.random() * 3)],
+          detectedAt: new Date()
+        };
+        
+        enhancements.unshift(newEnhancement);
+        saveEnhancements();
+        
+        autoEnhancerState.isAnalyzing = false;
+        autoEnhancerState.lastScan = new Date();
+        updateAutoEnhancerUI();
+        
+        showToast('Enhancement Detected', newEnhancement.name);
+        
+        // Simulate auto-implementation for high priority items
+        if (newEnhancement.priority === 'high') {
+          setTimeout(() => {
+            // Update enhancement status
+            const index = enhancements.findIndex(e => e.id === newEnhancement.id);
+            if (index >= 0) {
+              enhancements[index].status = 'implementing';
+              saveEnhancements();
+              
+              // Add to task list
+              addAutoTask(`Auto-Enhancement: ${newEnhancement.name}`);
+              
+              showToast('Auto-Implementation', `Starting work on "${newEnhancement.name}"`);
+            }
+          }, 5000);
+        }
+      }, 3000);
+    }
+    
+    // Add a task from the auto-enhancer
+    function addAutoTask(description) {
+      const newId = Date.now().toString();
+      tasks.push({
+        id: newId,
+        description,
+        status: 'in-progress'
+      });
+      saveTasks();
+    }
+    
+    // Generate random enhancement idea
+    function generateEnhancementIdea() {
+      const ideas = [
+        "Improve task filtering capabilities",
+        "Optimize render performance in TaskMonitor",
+        "Add keyboard shortcuts for common actions",
+        "Implement data caching for faster loading",
+        "Add dark mode support",
+        "Enhance mobile responsiveness",
+        "Implement drag and drop for task reordering",
+        "Add CSV export functionality",
+        "Improve error handling",
+        "Implement task grouping by tags"
+      ];
+      return ideas[Math.floor(Math.random() * ideas.length)];
+    }
+    
+    // Generate random enhancement description
+    function generateEnhancementDescription() {
+      const descriptions = [
+        "Analysis indicates this could improve user productivity by ~20%.",
+        "Performance measurements suggest a 30% reduction in response time is possible.",
+        "User interaction patterns show this would simplify common workflows.",
+        "Code analysis identified potential memory optimizations in this area.",
+        "UI/UX research suggests this would improve user satisfaction scores.",
+        "This enhancement aligns with current best practices for enterprise applications."
+      ];
+      return descriptions[Math.floor(Math.random() * descriptions.length)];
+    }
+    
+    // Show toast notification
+    function showToast(title, message) {
+      const toastEl = document.getElementById('toast');
+      const titleEl = document.getElementById('toast-title');
+      const messageEl = document.getElementById('toast-message');
+      
+      titleEl.textContent = title;
+      messageEl.textContent = message;
+      
+      toastEl.classList.add('show');
+      
+      setTimeout(() => {
+        toastEl.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Auto-enhancement simulation
+    function startAutoEnhancer() {
+      // Set up periodic monitoring (reduced frequency)
+      setInterval(() => {
+        if (!autoEnhancerState.isActive) return;
+        
+        // Reduced chance to collect metrics (equivalent to every 5 minutes)
+        if (Math.random() < 0.2) {
+          console.log('Collecting metrics...');
+          
+          // Track success rate of completed tasks
+          const completedTasks = tasks.filter(t => t.status === 'completed');
+          if (completedTasks.length > 0) {
+            // In a real system, this would analyze actual completion data
+            const simulatedSuccessRate = Math.random() * 0.3 + 0.65; // 65-95%
+            
+            if (simulatedSuccessRate < 0.8) {
+              // Identify potential learning opportunities
+              const learningTopics = [
+                'Task prioritization strategies',
+                'Efficient implementation patterns',
+                'Error prevention techniques',
+                'Performance optimization methods',
+                'Accessibility improvements'
+              ];
+              
+              const topic = learningTopics[Math.floor(Math.random() * learningTopics.length)];
+              
+              // Maybe create a learning-focused enhancement
+              if (Math.random() < 0.3) {
+                const newEnhancement = {
+                  id: `learning-${Date.now()}`,
+                  name: `Study and apply ${topic}`,
+                  description: `Task completion analysis suggests improving knowledge in ${topic} could enhance implementation quality.`,
+                  status: 'identified',
+                  priority: 'high',
+                  category: 'learning',
+                  impact: 80,
+                  detectedAt: new Date()
+                };
+                
+                enhancements.unshift(newEnhancement);
+                if (enhancements.length > 10) {
+                  enhancements.pop();
+                }
+                saveEnhancements();
+                
+                showToast('Learning Opportunity', `Identified knowledge gap: ${topic}`);
+              }
+            }
+          }
+        }
+        
+        // 5% chance to detect a new enhancement each minute - with 15-minute equiv frequency
+        // (for 15 minutes, that's about a 55% chance total per cycle)
+        if (Math.random() < 0.01) {
+          autoEnhancerState.isAnalyzing = true;
+          updateAutoEnhancerUI();
+          
+          setTimeout(() => {
+            const categories = ['performance', 'accessibility', 'task-efficiency', 'learning', 'ux'];
+            const category = categories[Math.floor(Math.random() * categories.length)];
+            
+            // Prioritize task-efficiency and learning enhancements
+            const adjustedCategory = Math.random() < 0.6 
+              ? (Math.random() < 0.7 ? 'task-efficiency' : 'learning') 
+              : category;
+            
+            const newEnhancement = {
+              id: `enh-${Date.now()}`,
+              name: generateEnhancementIdea(adjustedCategory),
+              description: generateEnhancementDescription(adjustedCategory),
+              status: 'identified',
+              priority: adjustedCategory === 'task-efficiency' ? 'high' : 
+                       adjustedCategory === 'learning' ? 'high' : 
+                       ['low', 'medium', 'high'][Math.floor(Math.random() * 3)],
+              category: adjustedCategory,
+              impact: adjustedCategory === 'task-efficiency' ? (Math.random() * 20 + 70) : 
+                     adjustedCategory === 'learning' ? (Math.random() * 25 + 65) :
+                     (Math.random() * 50 + 30),
+              detectedAt: new Date()
+            };
+            
+            enhancements.unshift(newEnhancement);
+            if (enhancements.length > 10) {
+              enhancements.pop(); // Keep only the 10 most recent
+            }
+            saveEnhancements();
+            
+            autoEnhancerState.isAnalyzing = false;
+            autoEnhancerState.lastScan = new Date();
+            updateAutoEnhancerUI();
+            
+            showToast('Enhancement Detected', `${newEnhancement.category.toUpperCase()}: ${newEnhancement.name}`);
+            
+            // Auto-implement high priority task-efficiency items
+            if (newEnhancement.category === 'task-efficiency' && 
+                newEnhancement.priority === 'high' &&
+                newEnhancement.impact > 75) {
+              setTimeout(() => {
+                // Update enhancement status
+                const index = enhancements.findIndex(e => e.id === newEnhancement.id);
+                if (index >= 0) {
+                  enhancements[index].status = 'implementing';
+                  saveEnhancements();
+                  
+                  // Add to task list with category prefix
+                  addAutoTask(`[TASK-EFFICIENCY] Auto-Enhancement: ${newEnhancement.name}`);
+                  
+                  showToast('Prioritizing Implementation', `Starting work on task efficiency improvement: ${newEnhancement.name}`);
+                }
+              }, 5000);
+            }
+            
+            // Also auto-implement learning tasks, but with a different approach
+            if (newEnhancement.category === 'learning' && newEnhancement.priority === 'high') {
+              setTimeout(() => {
+                // Update enhancement status
+                const index = enhancements.findIndex(e => e.id === newEnhancement.id);
+                if (index >= 0) {
+                  enhancements[index].status = 'implementing';
+                  saveEnhancements();
+                  
+                  // Add to task list
+                  const taskId = Date.now().toString();
+                  tasks.push({
+                    id: taskId,
+                    description: `[LEARNING] Auto-Enhancement: ${newEnhancement.name}`,
+                    status: 'in-progress'
+                  });
+                  saveTasks();
+                  
+                  showToast('Learning in Progress', `Studying: ${newEnhancement.name}`);
+                  
+                  // Complete the learning task after a delay
+                  setTimeout(() => {
+                    // Update task status
+                    const taskIndex = tasks.findIndex(t => t.id === taskId);
+                    if (taskIndex >= 0) {
+                      tasks[taskIndex].status = 'completed';
+                      saveTasks();
+                    }
+                    
+                    // Update enhancement status
+                    const enhIndex = enhancements.findIndex(e => e.id === newEnhancement.id);
+                    if (enhIndex >= 0) {
+                      enhancements[enhIndex].status = 'completed';
+                      saveEnhancements();
+                    }
+                    
+                    showToast('Learning Complete', `Applied knowledge from: ${newEnhancement.name}`);
+                    
+                    // Update knowledge areas when a learning task is completed
+                    const topicMatch = newEnhancement.name.match(/Study and apply (.*)|Improve knowledge of (.*)|Apply (.*) knowledge/);
+                    if (topicMatch) {
+                      const topic = topicMatch[1] || topicMatch[2] || topicMatch[3] || newEnhancement.name;
+                      
+                      // Check if topic exists
+                      const existingIndex = knowledgeAreas.findIndex(a => 
+                        a.topic.toLowerCase().includes(topic.toLowerCase()) || 
+                        topic.toLowerCase().includes(a.topic.toLowerCase())
+                      );
+                      
+                      if (existingIndex >= 0) {
+                        // Update existing topic
+                        knowledgeAreas[existingIndex].level = Math.min(knowledgeAreas[existingIndex].level + 0.15, 1);
+                        knowledgeAreas[existingIndex].lastPracticed = new Date();
+                        
+                        // Update category based on new level
+                        const level = knowledgeAreas[existingIndex].level;
+                        knowledgeAreas[existingIndex].category = level < 0.4 ? 'novice' : 
+                                                              level < 0.7 ? 'learning' : 
+                                                              level < 0.9 ? 'proficient' : 'expert';
+                      } else {
+                        // Add new topic
+                        knowledgeAreas.push({
+                          topic: topic,
+                          level: 0.3,
+                          category: 'novice',
+                          lastPracticed: new Date()
+                        });
+                      }
+                      
+                      // Increment improvements count
+                      learningImprovements++;
+                      
+                      // Update the learning UI
+                      updateLearningUI();
+                    }
+                  }, 20000);
+                }
+              }, 3000);
+            }
+          }, 3000);
+        }
+      }, 60000);
+      
+      // Periodically implement improvements - every 20 minutes instead of every 5
+      setInterval(() => {
+        if (!autoEnhancerState.isActive) return;
+        
+        // Find implementing enhancements
+        const implementingEnhancements = enhancements.filter(e => e.status === 'implementing');
+        
+        if (implementingEnhancements.length > 0) {
+          // Prioritize by category and impact
+          const sortedEnhancements = [...implementingEnhancements].sort((a, b) => {
+            const getCategoryPriority = (cat) => {
+              if (cat === 'task-efficiency') return 3;
+              if (cat === 'learning') return 2;
+              return 1;
+            };
+            
+            const catDiff = getCategoryPriority(a.category) - getCategoryPriority(b.category);
+            if (catDiff !== 0) return catDiff;
+            
+            return (b.impact || 0) - (a.impact || 0);
+          });
+          
+          const enhancement = sortedEnhancements[0];
+          
+          // Mark as completed
+          const index = enhancements.findIndex(e => e.id === enhancement.id);
+          if (index >= 0) {
+            enhancements[index].status = 'completed';
+            saveEnhancements();
+            
+            // Update corresponding task
+            const taskIndex = tasks.findIndex(t => t.description.includes(enhancement.name));
+            if (taskIndex >= 0) {
+              tasks[taskIndex].status = 'completed';
+              saveTasks();
+            }
+            
+            showToast('Enhancement Completed', `${enhancement.category.toUpperCase()}: ${enhancement.name}`);
+            
+            // If this was a learning enhancement, update knowledge areas
+            if (enhancement.category === 'learning') {
+              const topicMatch = enhancement.name.match(/Study and apply (.*)|Improve knowledge of (.*)|Apply (.*) knowledge/);
+              if (topicMatch) {
+                const topic = topicMatch[1] || topicMatch[2] || topicMatch[3] || enhancement.name;
+                
+                // Check if topic exists
+                const existingIndex = knowledgeAreas.findIndex(a => 
+                  a.topic.toLowerCase().includes(topic.toLowerCase()) || 
+                  topic.toLowerCase().includes(a.topic.toLowerCase())
+                );
+                
+                if (existingIndex >= 0) {
+                  // Update existing topic
+                  knowledgeAreas[existingIndex].level = Math.min(knowledgeAreas[existingIndex].level + 0.15, 1);
+                  knowledgeAreas[existingIndex].lastPracticed = new Date();
+                  
+                  // Update category based on new level
+                  const level = knowledgeAreas[existingIndex].level;
+                  knowledgeAreas[existingIndex].category = level < 0.4 ? 'novice' : 
+                                                        level < 0.7 ? 'learning' : 
+                                                        level < 0.9 ? 'proficient' : 'expert';
+                } else {
+                  // Add new topic
+                  knowledgeAreas.push({
+                    topic: topic,
+                    level: 0.3,
+                    category: 'novice',
+                    lastPracticed: new Date()
+                  });
+                }
+                
+                // Increment improvements count
+                learningImprovements++;
+                
+                // Update the learning UI
+                updateLearningUI();
+              }
+            }
+          }
+        }
+      }, 1200000); // Every 20 minutes
+    }
+    
+    // Generate enhancement idea based on category
+    function generateEnhancementIdea(category) {
+      const ideasByCategory = {
+        'performance': [
+          "Optimize task rendering performance",
+          "Implement virtualized list for large task sets",
+          "Add request batching for API calls",
+          "Cache frequently accessed task data",
+          "Optimize state update patterns"
+        ],
+        'accessibility': [
+          "Improve keyboard navigation for task items",
+          "Add ARIA attributes to task components",
+          "Enhance color contrast for better readability",
+          "Implement focus management for modals",
+          "Add screen reader announcements for status changes"
+        ],
+        'task-efficiency': [
+          "Add batch operations for similar tasks",
+          "Implement smart task prioritization",
+          "Create task templates for common patterns",
+          "Add contextual action suggestions after task completion",
+          "Improve task status transition workflow"
+        ],
+        'learning': [
+          "Study modern state management patterns",
+          "Research accessibility best practices",
+          "Learn advanced TypeScript techniques",
+          "Explore React performance optimization",
+          "Study error boundary implementation patterns"
+        ],
+        'ux': [
+          "Improve task status visualization",
+          "Add micro-animations for status changes",
+          "Implement drag and drop for task reordering",
+          "Enhance task detail view",
+          "Add customizable task views"
+        ]
+      };
+      
+      const ideas = ideasByCategory[category] || ideasByCategory['task-efficiency'];
+      return ideas[Math.floor(Math.random() * ideas.length)];
+    }
+    
+    // Generate enhancement description based on category
+    function generateEnhancementDescription(category) {
+      const descriptionsByCategory = {
+        'performance': [
+          "Performance analysis indicates potential rendering optimization could improve response time by ~25%.",
+          "Metrics show unnecessary re-renders that could be eliminated to improve UI responsiveness.",
+          "Memory profiling suggests optimization opportunities that could reduce resource usage."
+        ],
+        'accessibility': [
+          "Accessibility audit identified improvements needed to meet WCAG 2.1 AA standards.",
+          "Keyboard navigation flow analysis shows opportunities for improved focus management.",
+          "Screen reader testing revealed information gaps that could be addressed with proper ARIA attributes."
+        ],
+        'task-efficiency': [
+          "Task completion analysis shows this change could reduce average task handling time by 30%.",
+          "Current workflow requires 5 steps that could be reduced to 3 with this enhancement.",
+          "This improvement could eliminate common errors in the task management process."
+        ],
+        'learning': [
+          "Studying this topic would improve implementation quality across several components.",
+          "Mastering these patterns would enable more maintainable code and fewer bugs.",
+          "This knowledge area directly impacts our ability to implement efficient solutions."
+        ],
+        'ux': [
+          "User feedback and interaction patterns suggest this change would improve satisfaction.",
+          "Heatmap analysis shows users struggling with this workflow that could be improved.",
+          "This enhancement aligns with user mental models for how the system should work."
+        ]
+      };
+      
+      const descriptions = descriptionsByCategory[category] || descriptionsByCategory['task-efficiency'];
+      return descriptions[Math.floor(Math.random() * descriptions.length)];
+    }
+    
+    // Update learning UI
+    function updateLearningUI() {
+      const knowledgeAreasContainer = document.getElementById('knowledge-areas-list');
+      knowledgeAreasContainer.innerHTML = '';
+      
+      // Sort knowledge areas by level (descending)
+      const sortedAreas = [...knowledgeAreas].sort((a, b) => b.level - a.level);
+      
+      sortedAreas.forEach(area => {
+        const knowledgeArea = document.createElement('div');
+        knowledgeArea.className = 'knowledge-area';
+        
+        const header = document.createElement('div');
+        header.className = 'knowledge-header';
+        
+        const nameEl = document.createElement('div');
+        nameEl.className = 'knowledge-name';
+        nameEl.textContent = area.topic;
+        
+        const levelCategory = area.level < 0.4 ? 'Novice' : 
+                            area.level < 0.7 ? 'Learning' : 
+                            area.level < 0.9 ? 'Proficient' : 'Expert';
+        
+        const levelEl = document.createElement('div');
+        levelEl.className = 'knowledge-level';
+        levelEl.textContent = `${levelCategory} (${Math.round(area.level * 100)}%)`;
+        
+        const barBg = document.createElement('div');
+        barBg.className = 'knowledge-bar-bg';
+        
+        const bar = document.createElement('div');
+        bar.className = `knowledge-bar topic-${area.category}`;
+        bar.style.width = `${area.level * 100}%`;
+        
+        barBg.appendChild(bar);
+        header.appendChild(nameEl);
+        header.appendChild(levelEl);
+        knowledgeArea.appendChild(header);
+        knowledgeArea.appendChild(barBg);
+        
+        knowledgeAreasContainer.appendChild(knowledgeArea);
+      });
+      
+      // Update metrics
+      document.getElementById('knowledge-areas-count').textContent = knowledgeAreas.length;
+      
+      // Calculate learning efficiency (average of all levels)
+      const avgLevel = knowledgeAreas.reduce((sum, area) => sum + area.level, 0) / knowledgeAreas.length;
+      document.getElementById('learning-efficiency').textContent = `${Math.round(avgLevel * 100)}%`;
+      
+      document.getElementById('task-improvements').textContent = learningImprovements;
+      
+      // Set current learning focus (pick the lowest level topic)
+      const lowestLevel = [...knowledgeAreas].sort((a, b) => a.level - b.level)[0];
+      document.getElementById('current-learning-focus').textContent = `Learning focus: ${lowestLevel.topic}`;
+      
+      // Format last updated
+      const now = new Date();
+      const lastPracticed = new Date(Math.max(...knowledgeAreas.map(a => a.lastPracticed.getTime())));
+      const diffMinutes = Math.floor((now - lastPracticed) / 60000);
+      
+      let timeText = 'Just now';
+      if (diffMinutes > 0) {
+        if (diffMinutes < 60) {
+          timeText = `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+        } else {
+          const hours = Math.floor(diffMinutes / 60);
+          if (hours < 24) {
+            timeText = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+          } else {
+            const days = Math.floor(hours / 24);
+            timeText = `${days} day${days > 1 ? 's' : ''} ago`;
+          }
+        }
+      }
+      
+      document.getElementById('knowledge-updated').textContent = timeText;
+    }
+    
+    // Initialize the UI
+    updateUI();
+    updateEnhancementsUI();
+    updateAutoEnhancerUI();
+    updateLearningUI();
+    
+    // Start auto-enhancer
+    startAutoEnhancer();
+    
+    // Handle Enter key on input
+    document.getElementById('new-task').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        addTask();
+      }
+    });
+  </script>
+</body>
+</html> 

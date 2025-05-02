@@ -1,0 +1,41 @@
+# Button Component
+
+Create a reusable button component with the following features:
+
+## Requirements
+
+- Primary, secondary, and tertiary variants
+- Different sizes (small, medium, large)
+- Icon support (optional, can be positioned left or right)
+- Disabled state
+- Loading state with a spinner
+- Hover and focus states with appropriate visual feedback
+- Proper accessibility attributes (ARIA)
+- Keyboard navigation support
+
+## Technical Specifications
+
+- Use React with TypeScript
+- Include comprehensive prop types with JSDoc comments
+- Support for custom classes
+- Support for all HTML button attributes
+- Use CSS-in-JS or Tailwind for styling
+- Ensure responsive behavior on all screen sizes
+
+## Example Usage
+
+```tsx
+// Primary button
+<Button variant="primary" size="medium">Click Me</Button>
+
+// Secondary button with icon
+<Button variant="secondary" size="small" icon={<StarIcon />} iconPosition="left">Favorite</Button>
+
+// Disabled button
+<Button variant="primary" disabled>Cannot Click</Button>
+
+// Loading button
+<Button variant="primary" loading>Processing</Button>
+```
+
+The component should be fully tested and follow best practices for modern React development. 

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { ChevronRight, BarChart2, Box, Settings } from 'lucide-react';
+import { ChevronRight, BarChart2, Box, Settings, CheckSquare } from 'lucide-react';
 
 interface SidebarNavProps {
   className?: string;
@@ -56,6 +56,18 @@ function SidebarNav({ className }: SidebarNavProps) {
         {
           title: 'Assistant Usage',
           href: '/dashboard/assistant-analytics',
+          icon: <ChevronRight className="mr-2 h-4 w-4" />,
+        },
+      ],
+    },
+    {
+      title: 'Task Monitor',
+      href: '/monitor',
+      icon: <CheckSquare className="mr-2 h-4 w-4" />,
+      subitems: [
+        {
+          title: 'V0 UI',
+          href: '/monitor/v0',
           icon: <ChevronRight className="mr-2 h-4 w-4" />,
         },
       ],

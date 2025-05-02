@@ -1,0 +1,22 @@
+{
+  "name": "perslm-core",
+  "version": "0.1.0",
+  "description": "Base reasoning model for PersLM",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "benchmark": "node benchmarks/run-benchmark.js",
+    "cli": "node dist/cli/persrm-cli.js"
+  },
+  "dependencies": {
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/node": "^18.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0"
+  }
+} 

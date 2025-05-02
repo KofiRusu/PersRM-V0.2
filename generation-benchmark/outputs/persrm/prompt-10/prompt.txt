@@ -1,0 +1,22 @@
+Design a healthcare scheduling and management system with the following capabilities:
+
+- Patient portal with secure login and two-factor authentication
+- Appointment scheduling with provider/specialty filtering options
+- Intelligent scheduling that considers provider availability and patient preferences
+- Automated reminder system via email, SMS, or in-app notifications
+- Digital intake forms and medical history questionnaires
+- Insurance verification and cost estimation tools
+- Telehealth integration with video consultation capabilities
+- Prescription renewal requests and medication management
+- Lab results viewing with historical tracking and visualization
+- Secure messaging between patients and healthcare providers
+- Calendar synchronization with major platforms (Google, Apple, Outlook)
+- Administrative dashboard for staff to manage appointments and patient flow
+- Reporting tools for tracking no-shows, cancellations, and utilization metrics
+- Emergency contact management and access permissions
+- Multilingual support for diverse patient populations
+- Wait time estimations and notifications for in-person appointments
+- Self-service rescheduling with cancellation policy enforcement
+- Provider workload management and optimization
+
+The system must adhere to HIPAA compliance requirements for data security and privacy while maintaining an intuitive user experience that accommodates users of all technical abilities and accessibility needs. 

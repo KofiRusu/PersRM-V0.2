@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-04-27T19:57:18.100Z",
+  "config": {
+    "framework": "react",
+    "styling": "tailwind",
+    "enhancementEnabled": true
+  },
+  "results": [
+    {
+      "promptId": "02",
+      "componentType": "hero section",
+      "baselineScore": 62,
+      "enhancedScore": 91,
+      "improvement": 29
+    }
+  ]
+}

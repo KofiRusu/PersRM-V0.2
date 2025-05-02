@@ -1,0 +1,16 @@
+Create an interactive pricing calculator for a SaaS service that allows users to:
+
+- Select from multiple plan tiers (Basic, Pro, Enterprise)
+- Choose between monthly and annual billing cycles with appropriate discount for annual
+- Select the number of users/seats needed
+- Toggle on/off optional add-on features with associated costs
+- See a dynamically calculated total with itemized breakdown
+- View estimated cost savings compared to competitors
+- Export or share pricing quote via email
+- See a responsive design that works on mobile, tablet and desktop
+- Experience real-time updates as selections change without page reloads
+- Access an easily understandable interface with clear labeling and tooltips explaining features
+- Navigate keyboard controls and proper ARIA attributes for accessibility
+- View appropriate animations/transitions that enhance understanding of price changes
+
+Include validation to ensure selections are within allowable ranges and handle edge cases gracefully. 

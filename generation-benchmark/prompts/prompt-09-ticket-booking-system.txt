@@ -1,0 +1,20 @@
+Create a comprehensive ticket booking system for events with the following features:
+
+- User account management with profile settings and booking history
+- Event browsing with filtering by date, category, location, and price range
+- Interactive venue seating map with real-time availability indicators
+- Seat selection with price tiers and visibility indicators
+- Shopping cart functionality for multiple ticket purchases
+- Secure checkout with various payment options and discount code support
+- E-ticket generation with QR codes for easy venue entry
+- Booking confirmation emails and optional SMS notifications
+- Ticket transfer capability to share with friends/family
+- Cancellation and refund workflow with clear policies
+- Waitlist functionality for sold-out events
+- Calendar integration to add events to personal calendars
+- Mobile-responsive design with touch-optimized interfaces
+- Accessibility features for users with disabilities
+- Analytics dashboard for event organizers to track sales
+- Admin panel for managing events, venues, and customer service
+
+The system should handle high-volume traffic during popular event releases, implement fair queuing systems, and prevent ticket scalping through appropriate security measures. 

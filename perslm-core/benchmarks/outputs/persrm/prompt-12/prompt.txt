@@ -1,0 +1,24 @@
+Design a full-featured event management platform with the following capabilities:
+
+- User-friendly event creation wizard with customizable templates
+- Dynamic registration forms with conditional logic and payment integration
+- Tiered ticketing system with early bird, VIP, and group discounts
+- Interactive seating charts for reserved seating events
+- Attendee management with check-in/check-out functionality
+- Badge printing and QR code generation
+- Integrated marketing tools for email campaigns and social media promotion
+- Speaker and talent management with scheduling and accommodation tracking
+- Vendor and sponsor management portal
+- Budget tracking and financial reporting
+- Mobile app for attendees with personalized agendas and networking features
+- Real-time analytics dashboard for event performance metrics
+- Feedback and survey collection with automated analysis
+- Virtual and hybrid event capabilities with video streaming integration
+- Breakout session management for conferences and multi-track events
+- Staff and volunteer scheduling and task assignment
+- On-site emergency and incident reporting system
+- Post-event analytics and ROI reporting
+- Integration with CRM systems for lead capture and follow-up
+- Multilingual and multi-currency support for international events
+
+The platform should be scalable from small local gatherings to large international conferences, with intuitive interfaces for both organizers and attendees. Include mobile responsiveness and offline functionality for on-site use cases where internet connectivity may be limited. 

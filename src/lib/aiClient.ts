@@ -1,6 +1,6 @@
-import { openai } from './openai';
+import { openai } from "./openai";
 
-export type ModelType = 'openai' | 'ollama' | 'deepseek';
+export type ModelType = "openai" | "ollama" | "deepseek";
 
 interface GenerateOptions {
   model?: string;
@@ -23,13 +23,18 @@ const RETRY_DELAYS = [2000, 4000, 8000]; // Exponential backoff in milliseconds
  */
 export async function generateComponentFromPrompt(
   prompt: string,
-  options: GenerateOptions = {}
-): Promise<{ code: string; error?: string; modelUsed?: string; reasoningScore?: number }> {
+  options: GenerateOptions = {},
+): Promise<{
+  code: string;
+  error?: string;
+  modelUsed?: string;
+  reasoningScore?: number;
+}> {
   const {
-    model = 'gpt-4o',
-    modelType = 'openai',
+    model = "gpt-4o",
+    modelType = "openai",
     temperature = 0.4,
-    ollamaUrl = 'http://localhost:11434',
+    ollamaUrl = "http://localhost:11434",
   } = options;
 
   const startTime = Date.now();
@@ -38,44 +43,48 @@ export async function generateComponentFromPrompt(
 
   try {
     // Use the appropriate generator based on model type
-    if (modelType === 'deepseek' && !apiKeyStatus.deepseek.disabled) {
+    if (modelType === "deepseek" && !apiKeyStatus.deepseek.disabled) {
       try {
         result = await generateWithDeepSeek(prompt, model, temperature);
         modelUsed = `deepseek:${model}`;
       } catch (error) {
         // Log DeepSeek error and fall back to OpenAI
-        console.error('DeepSeek API error, falling back to OpenAI:', error);
+        console.error("DeepSeek API error, falling back to OpenAI:", error);
         apiKeyStatus.deepseek.disabled = true;
         apiKeyStatus.deepseek.lastError = error;
-        
+
         // Set retry timer to re-enable after 30 minutes
         apiKeyStatus.deepseek.retryAfter = Date.now() + 30 * 60 * 1000;
-        
+
         // Fall back to OpenAI
-        result = await generateWithOpenAI(prompt, 'gpt-4o', temperature);
-        modelUsed = 'openai:gpt-4o';
+        result = await generateWithOpenAI(prompt, "gpt-4o", temperature);
+        modelUsed = "openai:gpt-4o";
       }
-    } else if (modelType === 'openai' && !apiKeyStatus.openai.disabled) {
+    } else if (modelType === "openai" && !apiKeyStatus.openai.disabled) {
       result = await generateWithOpenAI(prompt, model, temperature);
       modelUsed = `openai:${model}`;
-    } else if (modelType === 'ollama') {
+    } else if (modelType === "ollama") {
       result = await generateWithOllama(prompt, model, ollamaUrl);
       modelUsed = `ollama:${model}`;
     } else {
       // If the preferred model type is disabled, try the alternative
-      if (modelType === 'deepseek' && apiKeyStatus.deepseek.disabled) {
+      if (modelType === "deepseek" && apiKeyStatus.deepseek.disabled) {
         if (!apiKeyStatus.openai.disabled) {
-          result = await generateWithOpenAI(prompt, 'gpt-4o', temperature);
-          modelUsed = 'openai:gpt-4o';
+          result = await generateWithOpenAI(prompt, "gpt-4o", temperature);
+          modelUsed = "openai:gpt-4o";
         } else {
-          throw new Error('All API providers are currently disabled');
+          throw new Error("All API providers are currently disabled");
         }
-      } else if (modelType === 'openai' && apiKeyStatus.openai.disabled) {
+      } else if (modelType === "openai" && apiKeyStatus.openai.disabled) {
         if (!apiKeyStatus.deepseek.disabled) {
-          result = await generateWithDeepSeek(prompt, 'deepseek-chat', temperature);
-          modelUsed = 'deepseek:deepseek-chat';
+          result = await generateWithDeepSeek(
+            prompt,
+            "deepseek-chat",
+            temperature,
+          );
+          modelUsed = "deepseek:deepseek-chat";
         } else {
-          throw new Error('All API providers are currently disabled');
+          throw new Error("All API providers are currently disabled");
         }
       }
     }
@@ -90,62 +99,78 @@ export async function generateComponentFromPrompt(
     }
 
     // Log the test for analytics
-    await logReasoningTest(prompt, result?.code || '', modelUsed, reasoningScore);
+    await logReasoningTest(
+      prompt,
+      result?.code || "",
+      modelUsed,
+      reasoningScore,
+    );
 
-    return { 
-      ...result, 
-      modelUsed, 
+    return {
+      ...result,
+      modelUsed,
       reasoningScore,
       metadata: {
         responseTime,
         modelUsed,
         inputPrompt: prompt,
-        timestamp: new Date().toISOString()
-      }
+        timestamp: new Date().toISOString(),
+      },
     };
   } catch (error) {
-    console.error('Error generating component:', error);
-    
+    console.error("Error generating component:", error);
+
     // Attempt retry with exponential backoff
     for (let i = 0; i < RETRY_DELAYS.length; i++) {
       try {
-        console.log(`Retry attempt ${i+1} after ${RETRY_DELAYS[i]}ms`);
-        await new Promise(resolve => setTimeout(resolve, RETRY_DELAYS[i]));
-        
+        console.log(`Retry attempt ${i + 1} after ${RETRY_DELAYS[i]}ms`);
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAYS[i]));
+
         // Try the alternative provider if available
-        if (!apiKeyStatus.openai.disabled && modelType !== 'openai') {
-          result = await generateWithOpenAI(prompt, 'gpt-4o', temperature);
-          modelUsed = 'openai:gpt-4o';
+        if (!apiKeyStatus.openai.disabled && modelType !== "openai") {
+          result = await generateWithOpenAI(prompt, "gpt-4o", temperature);
+          modelUsed = "openai:gpt-4o";
           break;
-        } else if (!apiKeyStatus.deepseek.disabled && modelType !== 'deepseek') {
-          result = await generateWithDeepSeek(prompt, 'deepseek-chat', temperature);
-          modelUsed = 'deepseek:deepseek-chat';
+        } else if (
+          !apiKeyStatus.deepseek.disabled &&
+          modelType !== "deepseek"
+        ) {
+          result = await generateWithDeepSeek(
+            prompt,
+            "deepseek-chat",
+            temperature,
+          );
+          modelUsed = "deepseek:deepseek-chat";
           break;
         }
       } catch (retryError) {
-        console.error(`Retry attempt ${i+1} failed:`, retryError);
+        console.error(`Retry attempt ${i + 1} failed:`, retryError);
         if (i === RETRY_DELAYS.length - 1) {
           return {
-            code: '',
-            error: 'All retry attempts failed. Please try again later.',
-            modelUsed: 'none',
+            code: "",
+            error: "All retry attempts failed. Please try again later.",
+            modelUsed: "none",
             metadata: {
-              error: error instanceof Error ? error.message : 'Unknown error occurred',
-              timestamp: new Date().toISOString()
-            }
+              error:
+                error instanceof Error
+                  ? error.message
+                  : "Unknown error occurred",
+              timestamp: new Date().toISOString(),
+            },
           };
         }
       }
     }
 
     return {
-      code: '',
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
-      modelUsed: 'none',
+      code: "",
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+      modelUsed: "none",
       metadata: {
-        error: error instanceof Error ? error.message : 'Unknown error occurred',
-        timestamp: new Date().toISOString()
-      }
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+        timestamp: new Date().toISOString(),
+      },
     };
   }
 }
@@ -155,17 +180,22 @@ export async function generateComponentFromPrompt(
  */
 export async function generateComponentFromSchema(
   schema: any,
-  options: GenerateOptions = {}
-): Promise<{ code: string; error?: string; modelUsed?: string; reasoningScore?: number }> {
+  options: GenerateOptions = {},
+): Promise<{
+  code: string;
+  error?: string;
+  modelUsed?: string;
+  reasoningScore?: number;
+}> {
   const {
-    model = 'gpt-4o',
-    modelType = 'openai',
+    model = "gpt-4o",
+    modelType = "openai",
     temperature = 0.4,
-    ollamaUrl = 'http://localhost:11434',
+    ollamaUrl = "http://localhost:11434",
   } = options;
 
   const schemaString = JSON.stringify(schema, null, 2);
-  
+
   // Create a prompt that instructs the model to generate a form based on the schema
   const prompt = `
 Generate a React component that implements a form based on the following JSON Schema:
@@ -192,44 +222,48 @@ The component should be complete and ready to use.
 
   try {
     // Use the appropriate generator based on model type
-    if (modelType === 'deepseek' && !apiKeyStatus.deepseek.disabled) {
+    if (modelType === "deepseek" && !apiKeyStatus.deepseek.disabled) {
       try {
         result = await generateWithDeepSeek(prompt, model, temperature);
         modelUsed = `deepseek:${model}`;
       } catch (error) {
         // Log DeepSeek error and fall back to OpenAI
-        console.error('DeepSeek API error, falling back to OpenAI:', error);
+        console.error("DeepSeek API error, falling back to OpenAI:", error);
         apiKeyStatus.deepseek.disabled = true;
         apiKeyStatus.deepseek.lastError = error;
-        
+
         // Set retry timer to re-enable after 30 minutes
         apiKeyStatus.deepseek.retryAfter = Date.now() + 30 * 60 * 1000;
-        
+
         // Fall back to OpenAI
-        result = await generateWithOpenAI(prompt, 'gpt-4o', temperature);
-        modelUsed = 'openai:gpt-4o';
+        result = await generateWithOpenAI(prompt, "gpt-4o", temperature);
+        modelUsed = "openai:gpt-4o";
       }
-    } else if (modelType === 'openai' && !apiKeyStatus.openai.disabled) {
+    } else if (modelType === "openai" && !apiKeyStatus.openai.disabled) {
       result = await generateWithOpenAI(prompt, model, temperature);
       modelUsed = `openai:${model}`;
-    } else if (modelType === 'ollama') {
+    } else if (modelType === "ollama") {
       result = await generateWithOllama(prompt, model, ollamaUrl);
       modelUsed = `ollama:${model}`;
     } else {
       // If the preferred model type is disabled, try the alternative
-      if (modelType === 'deepseek' && apiKeyStatus.deepseek.disabled) {
+      if (modelType === "deepseek" && apiKeyStatus.deepseek.disabled) {
         if (!apiKeyStatus.openai.disabled) {
-          result = await generateWithOpenAI(prompt, 'gpt-4o', temperature);
-          modelUsed = 'openai:gpt-4o';
+          result = await generateWithOpenAI(prompt, "gpt-4o", temperature);
+          modelUsed = "openai:gpt-4o";
         } else {
-          throw new Error('All API providers are currently disabled');
+          throw new Error("All API providers are currently disabled");
         }
-      } else if (modelType === 'openai' && apiKeyStatus.openai.disabled) {
+      } else if (modelType === "openai" && apiKeyStatus.openai.disabled) {
         if (!apiKeyStatus.deepseek.disabled) {
-          result = await generateWithDeepSeek(prompt, 'deepseek-chat', temperature);
-          modelUsed = 'deepseek:deepseek-chat';
+          result = await generateWithDeepSeek(
+            prompt,
+            "deepseek-chat",
+            temperature,
+          );
+          modelUsed = "deepseek:deepseek-chat";
         } else {
-          throw new Error('All API providers are currently disabled');
+          throw new Error("All API providers are currently disabled");
         }
       }
     }
@@ -244,62 +278,78 @@ The component should be complete and ready to use.
     }
 
     // Log the test for analytics
-    await logReasoningTest(prompt, result?.code || '', modelUsed, reasoningScore);
+    await logReasoningTest(
+      prompt,
+      result?.code || "",
+      modelUsed,
+      reasoningScore,
+    );
 
-    return { 
-      ...result, 
-      modelUsed, 
+    return {
+      ...result,
+      modelUsed,
       reasoningScore,
       metadata: {
         responseTime,
         modelUsed,
         inputPrompt: prompt,
-        timestamp: new Date().toISOString()
-      }
+        timestamp: new Date().toISOString(),
+      },
     };
   } catch (error) {
-    console.error('Error generating component from schema:', error);
-    
+    console.error("Error generating component from schema:", error);
+
     // Attempt retry with exponential backoff
     for (let i = 0; i < RETRY_DELAYS.length; i++) {
       try {
-        console.log(`Retry attempt ${i+1} after ${RETRY_DELAYS[i]}ms`);
-        await new Promise(resolve => setTimeout(resolve, RETRY_DELAYS[i]));
-        
+        console.log(`Retry attempt ${i + 1} after ${RETRY_DELAYS[i]}ms`);
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAYS[i]));
+
         // Try the alternative provider if available
-        if (!apiKeyStatus.openai.disabled && modelType !== 'openai') {
-          result = await generateWithOpenAI(prompt, 'gpt-4o', temperature);
-          modelUsed = 'openai:gpt-4o';
+        if (!apiKeyStatus.openai.disabled && modelType !== "openai") {
+          result = await generateWithOpenAI(prompt, "gpt-4o", temperature);
+          modelUsed = "openai:gpt-4o";
           break;
-        } else if (!apiKeyStatus.deepseek.disabled && modelType !== 'deepseek') {
-          result = await generateWithDeepSeek(prompt, 'deepseek-chat', temperature);
-          modelUsed = 'deepseek:deepseek-chat';
+        } else if (
+          !apiKeyStatus.deepseek.disabled &&
+          modelType !== "deepseek"
+        ) {
+          result = await generateWithDeepSeek(
+            prompt,
+            "deepseek-chat",
+            temperature,
+          );
+          modelUsed = "deepseek:deepseek-chat";
           break;
         }
       } catch (retryError) {
-        console.error(`Retry attempt ${i+1} failed:`, retryError);
+        console.error(`Retry attempt ${i + 1} failed:`, retryError);
         if (i === RETRY_DELAYS.length - 1) {
           return {
-            code: '',
-            error: 'All retry attempts failed. Please try again later.',
-            modelUsed: 'none',
+            code: "",
+            error: "All retry attempts failed. Please try again later.",
+            modelUsed: "none",
             metadata: {
-              error: error instanceof Error ? error.message : 'Unknown error occurred',
-              timestamp: new Date().toISOString()
-            }
+              error:
+                error instanceof Error
+                  ? error.message
+                  : "Unknown error occurred",
+              timestamp: new Date().toISOString(),
+            },
           };
         }
       }
     }
 
     return {
-      code: '',
-      error: error instanceof Error ? error.message : 'Unknown error occurred',
-      modelUsed: 'none',
+      code: "",
+      error: error instanceof Error ? error.message : "Unknown error occurred",
+      modelUsed: "none",
       metadata: {
-        error: error instanceof Error ? error.message : 'Unknown error occurred',
-        timestamp: new Date().toISOString()
-      }
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
+        timestamp: new Date().toISOString(),
+      },
     };
   }
 }
@@ -310,7 +360,7 @@ The component should be complete and ready to use.
 async function generateWithOpenAI(
   prompt: string,
   model: string,
-  temperature: number
+  temperature: number,
 ): Promise<{ code: string; error?: string }> {
   // If OpenAI client is available from the imported module
   if (openai) {
@@ -319,60 +369,60 @@ async function generateWithOpenAI(
         model,
         messages: [
           {
-            role: 'system',
+            role: "system",
             content: `You are an expert frontend engineer who specializes in creating React components with Tailwind CSS and Shadcn UI. 
             You output clean, accessible, well-structured TypeScript code. 
             When given a request, you respond with a complete, ready-to-use React component.
             Always wrap your code in \`\`\`tsx code blocks and include proper imports.
-            Never include explanations or comments outside the code block.`
+            Never include explanations or comments outside the code block.`,
           },
-          { role: 'user', content: prompt }
+          { role: "user", content: prompt },
         ],
         temperature,
       });
 
-      const content = response.choices[0]?.message.content || '';
-      
+      const content = response.choices[0]?.message.content || "";
+
       // Extract code from markdown code blocks if present
       const codeMatch = content.match(/```(?:tsx|jsx|ts|js)?\s*([\s\S]*?)```/);
       const code = codeMatch ? codeMatch[1].trim() : content;
-      
+
       return { code };
     } catch (error) {
       // Mark OpenAI as disabled if we get a serious error
-      if (error instanceof Error && error.message.includes('401')) {
+      if (error instanceof Error && error.message.includes("401")) {
         apiKeyStatus.openai.disabled = true;
         apiKeyStatus.openai.lastError = error;
         apiKeyStatus.openai.retryAfter = Date.now() + 30 * 60 * 1000;
       }
-      
+
       if (error instanceof Error) {
-        return { code: '', error: error.message };
+        return { code: "", error: error.message };
       }
-      return { code: '', error: 'Unknown error with OpenAI API' };
+      return { code: "", error: "Unknown error with OpenAI API" };
     }
-  } 
-  
+  }
+
   // Fallback to fetch if the OpenAI client isn't available
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
         model,
         messages: [
           {
-            role: 'system',
+            role: "system",
             content: `You are an expert frontend engineer who specializes in creating React components with Tailwind CSS and Shadcn UI. 
             You output clean, accessible, well-structured TypeScript code. 
             When given a request, you respond with a complete, ready-to-use React component.
             Always wrap your code in \`\`\`tsx code blocks and include proper imports.
-            Never include explanations or comments outside the code block.`
+            Never include explanations or comments outside the code block.`,
           },
-          { role: 'user', content: prompt }
+          { role: "user", content: prompt },
         ],
         temperature,
       }),
@@ -381,25 +431,29 @@ async function generateWithOpenAI(
     if (!response.ok) {
       if (response.status === 401 || response.status === 403) {
         apiKeyStatus.openai.disabled = true;
-        apiKeyStatus.openai.lastError = new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+        apiKeyStatus.openai.lastError = new Error(
+          `OpenAI API error: ${response.status} ${response.statusText}`,
+        );
         apiKeyStatus.openai.retryAfter = Date.now() + 30 * 60 * 1000;
       }
-      throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `OpenAI API error: ${response.status} ${response.statusText}`,
+      );
     }
 
     const data = await response.json();
-    const content = data.choices[0]?.message?.content || '';
-    
+    const content = data.choices[0]?.message?.content || "";
+
     // Extract code from markdown code blocks if present
     const codeMatch = content.match(/```(?:tsx|jsx|ts|js)?\s*([\s\S]*?)```/);
     const code = codeMatch ? codeMatch[1].trim() : content;
-    
+
     return { code };
   } catch (error) {
     if (error instanceof Error) {
-      return { code: '', error: error.message };
+      return { code: "", error: error.message };
     }
-    return { code: '', error: 'Unknown error with OpenAI API' };
+    return { code: "", error: "Unknown error with OpenAI API" };
   }
 }
 
@@ -409,13 +463,13 @@ async function generateWithOpenAI(
 async function generateWithOllama(
   prompt: string,
   model: string,
-  ollamaUrl: string
+  ollamaUrl: string,
 ): Promise<{ code: string; error?: string }> {
   try {
     const response = await fetch(`${ollamaUrl}/api/generate`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         model,
@@ -431,22 +485,24 @@ async function generateWithOllama(
     });
 
     if (!response.ok) {
-      throw new Error(`Ollama API error: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Ollama API error: ${response.status} ${response.statusText}`,
+      );
     }
 
     const data = await response.json();
-    const content = data.response || '';
-    
+    const content = data.response || "";
+
     // Extract code from markdown code blocks if present
     const codeMatch = content.match(/```(?:tsx|jsx|ts|js)?\s*([\s\S]*?)```/);
     const code = codeMatch ? codeMatch[1].trim() : content;
-    
+
     return { code };
   } catch (error) {
     if (error instanceof Error) {
-      return { code: '', error: error.message };
+      return { code: "", error: error.message };
     }
-    return { code: '', error: 'Unknown error with Ollama API' };
+    return { code: "", error: "Unknown error with Ollama API" };
   }
 }
 
@@ -455,28 +511,28 @@ async function generateWithOllama(
  */
 async function generateWithDeepSeek(
   prompt: string,
-  model: string = 'deepseek-chat',
-  temperature: number = 0.4
+  model: string = "deepseek-chat",
+  temperature: number = 0.4,
 ): Promise<{ code: string; error?: string }> {
   try {
-    const response = await fetch('https://api.deepseek.com/chat/completions', {
-      method: 'POST',
+    const response = await fetch("https://api.deepseek.com/chat/completions", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.DEEPSEEK_API_KEY}`,
       },
       body: JSON.stringify({
         model,
         messages: [
           {
-            role: 'system',
+            role: "system",
             content: `You are an expert frontend engineer who specializes in creating React components with Tailwind CSS and Shadcn UI. 
             You output clean, accessible, well-structured TypeScript code. 
             When given a request, you respond with a complete, ready-to-use React component.
             Always wrap your code in \`\`\`tsx code blocks and include proper imports.
-            Never include explanations or comments outside the code block.`
+            Never include explanations or comments outside the code block.`,
           },
-          { role: 'user', content: prompt }
+          { role: "user", content: prompt },
         ],
         temperature,
       }),
@@ -485,25 +541,29 @@ async function generateWithDeepSeek(
     if (!response.ok) {
       if (response.status === 400 || response.status === 401) {
         apiKeyStatus.deepseek.disabled = true;
-        apiKeyStatus.deepseek.lastError = new Error(`DeepSeek API error: ${response.status} ${response.statusText}`);
+        apiKeyStatus.deepseek.lastError = new Error(
+          `DeepSeek API error: ${response.status} ${response.statusText}`,
+        );
         apiKeyStatus.deepseek.retryAfter = Date.now() + 30 * 60 * 1000;
       }
-      throw new Error(`DeepSeek API error: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `DeepSeek API error: ${response.status} ${response.statusText}`,
+      );
     }
 
     const data = await response.json();
-    const content = data.choices[0]?.message?.content || '';
-    
+    const content = data.choices[0]?.message?.content || "";
+
     // Extract code from markdown code blocks if present
     const codeMatch = content.match(/```(?:tsx|jsx|ts|js)?\s*([\s\S]*?)```/);
     const code = codeMatch ? codeMatch[1].trim() : content;
-    
+
     return { code };
   } catch (error) {
     if (error instanceof Error) {
-      return { code: '', error: error.message };
+      return { code: "", error: error.message };
     }
-    return { code: '', error: 'Unknown error with DeepSeek API' };
+    return { code: "", error: "Unknown error with DeepSeek API" };
   }
 }
 
@@ -538,13 +598,13 @@ export async function rateReasoning(code: string): Promise<number> {
     // Use the openai client if available
     if (openai) {
       const response = await openai.chat.completions.create({
-        model: 'gpt-4o',
-        messages: [{ role: 'user', content: prompt }],
+        model: "gpt-4o",
+        messages: [{ role: "user", content: prompt }],
         temperature: 0.3,
       });
 
-      const content = response.choices[0]?.message.content || '';
-      
+      const content = response.choices[0]?.message.content || "";
+
       // Extract score using regex
       const scoreMatch = content.match(/\b([1-9]|10)\b/);
       if (scoreMatch) {
@@ -552,26 +612,31 @@ export async function rateReasoning(code: string): Promise<number> {
       }
     } else {
       // Use fetch API as fallback
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-4o",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.3,
+          }),
         },
-        body: JSON.stringify({
-          model: 'gpt-4o',
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.3,
-        }),
-      });
+      );
 
       if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+        throw new Error(
+          `OpenAI API error: ${response.status} ${response.statusText}`,
+        );
       }
 
       const data = await response.json();
-      const content = data.choices[0]?.message?.content || '';
-      
+      const content = data.choices[0]?.message?.content || "";
+
       // Extract score using regex
       const scoreMatch = content.match(/\b([1-9]|10)\b/);
       if (scoreMatch) {
@@ -582,7 +647,7 @@ export async function rateReasoning(code: string): Promise<number> {
     // Default fallback score
     return 5;
   } catch (error) {
-    console.error('Error rating reasoning:', error);
+    console.error("Error rating reasoning:", error);
     return 5; // Default middle score on error
   }
 }
@@ -594,13 +659,13 @@ async function logReasoningTest(
   prompt: string,
   code: string,
   model: string,
-  score?: number
+  score?: number,
 ): Promise<void> {
   try {
-    const response = await fetch('/api/reasoning-log', {
-      method: 'POST',
+    const response = await fetch("/api/reasoning-log", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         prompt,
@@ -611,10 +676,10 @@ async function logReasoningTest(
     });
 
     if (!response.ok) {
-      console.error('Error logging reasoning test:', await response.text());
+      console.error("Error logging reasoning test:", await response.text());
     }
   } catch (error) {
-    console.error('Error logging reasoning test:', error);
+    console.error("Error logging reasoning test:", error);
   }
 }
 
@@ -627,7 +692,7 @@ export function formatCode(code: string): string {
     // In a real application, you might use a proper code formatter like prettier
     return code.trim();
   } catch (error) {
-    console.error('Error formatting code:', error);
+    console.error("Error formatting code:", error);
     return code;
   }
 }
@@ -635,11 +700,14 @@ export function formatCode(code: string): string {
 /**
  * Check if API provider is available
  */
-export function isProviderAvailable(provider: 'openai' | 'deepseek'): boolean {
+export function isProviderAvailable(provider: "openai" | "deepseek"): boolean {
   // Check if provider is disabled
   if (apiKeyStatus[provider].disabled) {
     // Check if retry period has elapsed
-    if (apiKeyStatus[provider].retryAfter && Date.now() > apiKeyStatus[provider].retryAfter) {
+    if (
+      apiKeyStatus[provider].retryAfter &&
+      Date.now() > apiKeyStatus[provider].retryAfter
+    ) {
       // Re-enable provider for retry
       apiKeyStatus[provider].disabled = false;
       apiKeyStatus[provider].lastError = null;
@@ -660,9 +728,18 @@ export interface RouteGenerationOptions {
   model?: string;
 }
 
-export async function generateRouteCode(options: RouteGenerationOptions): Promise<string> {
-  const { prompt, method, endpoint, requestData, responseFormat, model = "gpt-4" } = options;
-  
+export async function generateRouteCode(
+  options: RouteGenerationOptions,
+): Promise<string> {
+  const {
+    prompt,
+    method,
+    endpoint,
+    requestData,
+    responseFormat,
+    model = "gpt-4",
+  } = options;
+
   try {
     // Determine which AI model to use
     if (model.startsWith("gpt-")) {
@@ -672,23 +749,34 @@ export async function generateRouteCode(options: RouteGenerationOptions): Promis
     }
   } catch (error) {
     console.error("Error generating route code:", error);
-    throw new Error(error instanceof Error ? error.message : "Failed to generate route code");
+    throw new Error(
+      error instanceof Error ? error.message : "Failed to generate route code",
+    );
   }
 }
 
 /**
  * Generate route code using OpenAI
  */
-async function generateRouteWithOpenAI(options: RouteGenerationOptions): Promise<string> {
-  const { prompt, method, endpoint, requestData, responseFormat, model = "gpt-4" } = options;
-  
+async function generateRouteWithOpenAI(
+  options: RouteGenerationOptions,
+): Promise<string> {
+  const {
+    prompt,
+    method,
+    endpoint,
+    requestData,
+    responseFormat,
+    model = "gpt-4",
+  } = options;
+
   try {
     // Check if OpenAI client is initialized
     const openai = getOpenAIClient();
     if (!openai) {
       throw new Error("OpenAI client not initialized");
     }
-    
+
     // Construct the system prompt
     const systemPrompt = `You are an expert Next.js API route generator. Your task is to generate well-structured, 
     clean and secure route handlers for Next.js App Router. Follow these guidelines:
@@ -699,46 +787,59 @@ async function generateRouteWithOpenAI(options: RouteGenerationOptions): Promise
     - Follow best practices for security, validation and error handling
     - Do not import components or libraries that would not be used
     - Generate ONLY the code, no explanations or markdown`;
-    
+
     // Construct the user prompt
     let userPrompt = `Generate a ${method} route handler for endpoint "${endpoint}" that does the following:
     
     ${prompt}
     `;
-    
+
     if (requestData) {
       userPrompt += `\nThe request body structure should be: ${requestData}`;
     }
-    
+
     if (responseFormat) {
       userPrompt += `\nThe response format should be: ${responseFormat}`;
     }
-    
+
     // Make the API call
     const response = await openai.chat.completions.create({
       model: model,
       messages: [
         { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt }
+        { role: "user", content: userPrompt },
       ],
       temperature: 0.5,
     });
-    
+
     // Extract and return the generated code
     const generatedCode = response.choices[0]?.message.content || "";
     return generatedCode.trim();
   } catch (error) {
     console.error("OpenAI route generation error:", error);
-    throw new Error(error instanceof Error ? error.message : "Failed to generate route with OpenAI");
+    throw new Error(
+      error instanceof Error
+        ? error.message
+        : "Failed to generate route with OpenAI",
+    );
   }
 }
 
 /**
  * Generate route code using Ollama
  */
-async function generateRouteWithOllama(options: RouteGenerationOptions): Promise<string> {
-  const { prompt, method, endpoint, requestData, responseFormat, model = "llama3" } = options;
-  
+async function generateRouteWithOllama(
+  options: RouteGenerationOptions,
+): Promise<string> {
+  const {
+    prompt,
+    method,
+    endpoint,
+    requestData,
+    responseFormat,
+    model = "llama3",
+  } = options;
+
   try {
     // Construct the system prompt
     const systemPrompt = `You are an expert Next.js API route generator. Your task is to generate well-structured, 
@@ -750,21 +851,21 @@ async function generateRouteWithOllama(options: RouteGenerationOptions): Promise
     - Follow best practices for security, validation and error handling
     - Do not import components or libraries that would not be used
     - Generate ONLY the code, no explanations or markdown`;
-    
+
     // Construct the user prompt
     let userPrompt = `Generate a ${method} route handler for endpoint "${endpoint}" that does the following:
     
     ${prompt}
     `;
-    
+
     if (requestData) {
       userPrompt += `\nThe request body structure should be: ${requestData}`;
     }
-    
+
     if (responseFormat) {
       userPrompt += `\nThe response format should be: ${responseFormat}`;
     }
-    
+
     // Make the API call to Ollama
     const response = await fetch("http://localhost:11434/api/generate", {
       method: "POST",
@@ -777,16 +878,22 @@ async function generateRouteWithOllama(options: RouteGenerationOptions): Promise
         stream: false,
       }),
     });
-    
+
     if (!response.ok) {
-      throw new Error(`Ollama API error: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Ollama API error: ${response.status} ${response.statusText}`,
+      );
     }
-    
+
     const result = await response.json();
     return result.response.trim();
   } catch (error) {
     console.error("Ollama route generation error:", error);
-    throw new Error(error instanceof Error ? error.message : "Failed to generate route with Ollama");
+    throw new Error(
+      error instanceof Error
+        ? error.message
+        : "Failed to generate route with Ollama",
+    );
   }
 }
 
@@ -799,8 +906,17 @@ export type RouteGenerationOptions = {
   model?: ModelType;
 };
 
-export async function generateRouteCode(options: RouteGenerationOptions): Promise<string> {
-  const { method, endpoint, description, requestData, responseFormat, model = 'openai' } = options;
+export async function generateRouteCode(
+  options: RouteGenerationOptions,
+): Promise<string> {
+  const {
+    method,
+    endpoint,
+    description,
+    requestData,
+    responseFormat,
+    model = "openai",
+  } = options;
 
   // Create a prompt for the route generation
   const prompt = `
@@ -808,11 +924,19 @@ Generate a Next.js API route handler for a ${method.toUpperCase()} endpoint at $
 
 Description: ${description}
 
-${requestData ? `The request will include the following data structure:
-${requestData}` : 'The request does not include any body data.'}
+${
+  requestData
+    ? `The request will include the following data structure:
+${requestData}`
+    : "The request does not include any body data."
+}
 
-${responseFormat ? `The response should follow this format:
-${responseFormat}` : 'The response should return appropriate status codes and messages.'}
+${
+  responseFormat
+    ? `The response should follow this format:
+${responseFormat}`
+    : "The response should return appropriate status codes and messages."
+}
 
 Requirements:
 - Use Next.js App Router API route conventions
@@ -825,45 +949,63 @@ Requirements:
 - Return only the complete code for the route.ts file with no additional explanations
 `;
 
-  const modelType = typeof model === 'string' && (model === 'openai' || model === 'ollama' || model === 'deepseek') 
-    ? model as ModelType 
-    : 'openai';
-  
-  const modelName = typeof model === 'string' && model !== 'openai' && model !== 'ollama' && model !== 'deepseek'
-    ? model
-    : modelType === 'openai' ? 'gpt-4o' : 'llama3';
+  const modelType =
+    typeof model === "string" &&
+    (model === "openai" || model === "ollama" || model === "deepseek")
+      ? (model as ModelType)
+      : "openai";
+
+  const modelName =
+    typeof model === "string" &&
+    model !== "openai" &&
+    model !== "ollama" &&
+    model !== "deepseek"
+      ? model
+      : modelType === "openai"
+        ? "gpt-4o"
+        : "llama3";
 
   try {
     // Use the appropriate generator based on model type
-    if (modelType === 'openai') {
+    if (modelType === "openai") {
       const result = await generateWithOpenAI(prompt, modelName, 0.4);
-      
+
       // Extract code from markdown code blocks if present
-      const codeMatch = result.code.match(/```(?:tsx|ts|js|jsx)?\s*([\s\S]*?)```/);
+      const codeMatch = result.code.match(
+        /```(?:tsx|ts|js|jsx)?\s*([\s\S]*?)```/,
+      );
       const code = codeMatch ? codeMatch[1].trim() : result.code;
-      
+
       return code;
-    } else if (modelType === 'ollama') {
-      const result = await generateWithOllama(prompt, modelName, 'http://localhost:11434');
-      
+    } else if (modelType === "ollama") {
+      const result = await generateWithOllama(
+        prompt,
+        modelName,
+        "http://localhost:11434",
+      );
+
       // Extract code from markdown code blocks if present
-      const codeMatch = result.code.match(/```(?:tsx|ts|js|jsx)?\s*([\s\S]*?)```/);
+      const codeMatch = result.code.match(
+        /```(?:tsx|ts|js|jsx)?\s*([\s\S]*?)```/,
+      );
       const code = codeMatch ? codeMatch[1].trim() : result.code;
-      
+
       return code;
-    } else if (modelType === 'deepseek') {
+    } else if (modelType === "deepseek") {
       const result = await generateWithDeepSeek(prompt, modelName, 0.4);
-      
+
       // Extract code from markdown code blocks if present
-      const codeMatch = result.code.match(/```(?:tsx|ts|js|jsx)?\s*([\s\S]*?)```/);
+      const codeMatch = result.code.match(
+        /```(?:tsx|ts|js|jsx)?\s*([\s\S]*?)```/,
+      );
       const code = codeMatch ? codeMatch[1].trim() : result.code;
-      
+
       return code;
     }
-    
+
     throw new Error(`Unsupported model type: ${modelType}`);
   } catch (error) {
-    console.error('Error generating route code:', error);
+    console.error("Error generating route code:", error);
     throw error;
   }
-} 
+}

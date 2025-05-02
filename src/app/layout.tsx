@@ -7,8 +7,8 @@ import { ReasoningAssistantProvider } from '@/components/ui-generator/ReasoningA
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'PersLM - AI UI Generator',
-  description: 'A personal LLM-powered UI generator',
+  title: 'PersLM - Task Monitor',
+  description: 'Task monitoring and management application',
 }
 
 export default function RootLayout({
@@ -19,10 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ReasoningAssistantProvider>
-          {children}
-        </ReasoningAssistantProvider>
-        <Toaster />
+        {children}
       </body>
     </html>
   )

@@ -13,3 +13,13 @@ export {
   SelectTrigger,
   SelectValue
 } from './select'; 
+export {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from './dialog';
+export { Checkbox } from './checkbox'; 

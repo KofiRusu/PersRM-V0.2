@@ -1,53 +1,92 @@
-# PersRM - Complete UI/UX Performance and Enhancement Suite
+# PersRM - Personalized Reasoning Model
 
-This repository contains several UI/UX tools for analyzing, optimizing, and enhancing web applications.
+PersRM is a personalized reasoning model that provides advanced reasoning capabilities for complex tasks. It features multiple reasoning strategies, memory systems, and integrations with various platforms.
 
----
+## Project Structure
 
-## Schema UI System with AI Component Generator
+This is a monorepo containing the following packages:
 
-This project combines a comprehensive schema-driven UI system with an AI-powered UI component generator similar to Vercel's v0.dev.
+- **persrm-core**: Core reasoning model and execution logic
+  - Reasoning engine (various reasoning strategies)
+  - Memory module (short-term and long-term)
+  - Task planning and execution
+  - Plugin system
 
-### Features
+- **persrm-ui**: Web/desktop UI built with Next.js
+  - Next.js frontend with Tailwind CSS
+  - Interactive reasoning interface
+  - Session management
+  - Visualization components
 
-- Schema-driven form generation
-- Version control and diffing
-- Real-time collaboration
-- AI-powered change analysis
-- Generate UI components from natural language prompts
-- Create forms from JSON schema
-- Multiple AI model support (OpenAI, Ollama)
-- Component tagging and organization
+- **persrm-bridge-anythingllm**: AnythingLLM integration
+  - REST API for reasoning
+  - WebSocket for real-time updates
+  - Compatible with AnythingLLM plugin system
 
----
+## Getting Started
 
-## UX Enhancer
+### Prerequisites
 
-A powerful UX enhancement and analysis tool for improving your application's user experience.
+- Node.js 16.x or later
+- npm 7.x or later
 
-### Features
+### Installation
 
-- **Real-time UX Analysis**: Evaluate your application's user experience in real-time
-- **Performance Metrics**: Track key performance indicators across different phases
-- **Issue Detection**: Automatically identify UX issues with severity ratings
-- **Enhancement Suggestions**: Receive actionable suggestions to improve your UI/UX
-- **Comprehensive Dashboard**: Visualize analysis results in an intuitive dashboard
-- **Report Generation**: Generate detailed reports for documentation and tracking
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/persrm.git
+cd persrm
 
----
+# Install dependencies for all packages
+npm install
+```
 
-## PersRM Core
+### Development
 
-PersRM is a comprehensive tool for analyzing, optimizing, and enhancing the UI/UX performance of web applications. It provides detailed insights into visual consistency, design token usage, animations, and cognitive load, allowing developers to make data-driven decisions to improve their application's user experience.
+```bash
+# Build all packages
+npm run build
 
-### Features
+# Start UI in development mode
+npm run dev
 
-- 🔍 **Analysis**: Scan your project and identify UI/UX issues
-- ⚡ **Optimization**: Get actionable suggestions to improve performance
-- 🧩 **Component Generation**: Generate optimized components based on your design system
-- 📊 **Reporting**: Detailed reports for tracking improvements
-- 🔄 **CI Integration**: Integrate with CI/CD pipelines for continuous UX monitoring
-- 🔥 **Hot Reload**: Auto-optimization when files change with watcher
+# Start AnythingLLM bridge
+cd persrm-bridge-anythingllm
+npm run dev
+```
+
+## Usage
+
+### Web UI
+
+The web UI will be available at http://localhost:3000 when running the development server.
+
+### AnythingLLM Integration
+
+The AnythingLLM bridge will be available at http://localhost:3100 when running the bridge server.
+
+### API Usage
+
+To use the core reasoning capabilities in your own code:
+
+```typescript
+import { startReasoning } from 'persrm-core';
+
+const result = await startReasoning('What are the main applications of transformer models?', {
+  mode: 'chain_of_thought',
+  saveToMemory: true
+});
+
+console.log(result.result.answer);
+```
+
+## Package-Specific Documentation
+
+Each package has its own README.md with detailed documentation:
+
+- [persrm-core/README.md](./persrm-core/README.md)
+- [persrm-ui/README.md](./persrm-ui/README.md)
+- [persrm-bridge-anythingllm/README.md](./persrm-bridge-anythingllm/README.md)
 
 ## License
 

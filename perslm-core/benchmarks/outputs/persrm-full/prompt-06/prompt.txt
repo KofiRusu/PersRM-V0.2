@@ -1,0 +1,15 @@
+Create a visually engaging and interactive 404 error page that:
+
+- Features a creative animation that illustrates the concept of a missing page
+- Includes a brief, friendly error message explaining that the page cannot be found
+- Provides helpful navigation options back to functional parts of the site (home page, search, sitemap, etc.)
+- Has a search box to help users find what they were looking for
+- Incorporates subtle interaction effects (hover states, mouse-follow elements, etc.)
+- Uses motion that respects user preferences (reduced motion settings)
+- Is fully responsive across all device sizes
+- Maintains brand consistency with the rest of the site
+- Includes appropriate ARIA attributes and keyboard navigation for accessibility
+- Loads quickly and doesn't impact performance
+- Uses creative illustrations or imagery that makes the error experience less frustrating
+
+The 404 page should turn a potentially negative user experience into a memorable and helpful interaction that guides users back to valuable content. 

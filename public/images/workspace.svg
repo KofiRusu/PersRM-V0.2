@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect x="20" y="40" width="160" height="120" rx="5" ry="5" fill="#f0f9ff" stroke="#3b82f6" stroke-width="2"/>
+  <rect x="30" y="60" width="70" height="90" rx="3" ry="3" fill="white" stroke="#3b82f6" stroke-width="2"/>
+  <rect x="110" y="60" width="60" height="40" rx="3" ry="3" fill="white" stroke="#3b82f6" stroke-width="2"/>
+  <rect x="110" y="110" width="60" height="40" rx="3" ry="3" fill="white" stroke="#3b82f6" stroke-width="2"/>
+  <line x1="40" y1="80" x2="90" y2="80" stroke="#3b82f6" stroke-width="2"/>
+  <line x1="40" y1="100" x2="90" y2="100" stroke="#3b82f6" stroke-width="2"/>
+  <line x1="40" y1="120" x2="90" y2="120" stroke="#3b82f6" stroke-width="2"/>
+  <text x="100" y="30" font-family="Arial" font-size="14" text-anchor="middle" fill="#3b82f6">Customizable Workspace</text>
+</svg> 

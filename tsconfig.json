@@ -2,7 +2,10 @@
   "compilerOptions": {
     "target": "ES2019",
     "module": "commonjs",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "declaration": true,
     "outDir": "./dist",
     "rootDir": "./src",
@@ -12,13 +15,42 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "types": ["node", "fs-extra", "react", "jest"],
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
+    },
+    "types": [
+      "node",
+      "fs-extra",
+      "react",
+      "jest"
+    ],
     "noImplicitAny": false,
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ],
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+  "include": [
+    "src/**/*",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
 }

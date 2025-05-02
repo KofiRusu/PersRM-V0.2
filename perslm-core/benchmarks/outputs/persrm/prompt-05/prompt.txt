@@ -1,0 +1,20 @@
+Create a feature comparison table for a project management SaaS application that compares three subscription tiers: Basic, Pro, and Enterprise. The table should:
+
+- Display features in rows and plans in columns
+- Include at least 15 features spanning categories like:
+  * Task Management (task creation, assignment, subtasks, etc.)
+  * Collaboration (commenting, file sharing, @mentions, etc.)
+  * Reporting (basic reports, custom reports, data export, etc.)
+  * Integrations (number of integrations, API access, etc.)
+  * Security (2FA, SSO, audit logs, etc.)
+  * Support (response time, support channels, etc.)
+
+- Clearly mark which features are available in which plans using checkmarks, "x" marks, or similar indicators
+- Use visual styling to highlight the Pro plan as recommended
+- Include sticky/fixed column headers for better usability on mobile
+- Be fully responsive, adapting to various screen sizes
+- Have an accessible design with proper heading structure and ARIA attributes
+- Include hover states for better readability
+- Use a color scheme that provides sufficient contrast
+
+The table should be designed to make it easy for potential customers to compare features across different plans at a glance. 

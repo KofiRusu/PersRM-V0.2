@@ -2,7 +2,8 @@ import { Ollama } from "langchain/llms/ollama";
 import { getLocalStorage } from "./localStorage";
 import { env } from "@/env.mjs";
 
-const OLLAMA_BASE_URL = env.NEXT_PUBLIC_OLLAMA_BASE_URL || "http://localhost:11434";
+const OLLAMA_BASE_URL =
+  env.NEXT_PUBLIC_OLLAMA_BASE_URL || "http://localhost:11434";
 const DEFAULT_MODEL = "llama3";
 
 // Check if the reasoning model is available
@@ -10,7 +11,7 @@ export async function isReasoningModelAvailable(): Promise<boolean> {
   try {
     const response = await fetch(`${OLLAMA_BASE_URL}/api/tags`);
     if (!response.ok) return false;
-    
+
     const data = await response.json();
     return data.models.some((model: any) => model.name === DEFAULT_MODEL);
   } catch (error) {
@@ -20,7 +21,10 @@ export async function isReasoningModelAvailable(): Promise<boolean> {
 }
 
 // Generate reasoning using the Ollama API
-export async function getReasoning(prompt: string, context?: string): Promise<string> {
+export async function getReasoning(
+  prompt: string,
+  context?: string,
+): Promise<string> {
   try {
     // Prepare system prompt for reasoning
     let systemPrompt = `You are an expert UI/UX designer and frontend developer.
@@ -41,13 +45,13 @@ Provide concrete examples and patterns when possible.`;
 
     // Call the model with the system prompt and user prompt
     const result = await model.call(
-      `${systemPrompt}\n\nQuestion or challenge: ${prompt}\n\nReasoning:`
+      `${systemPrompt}\n\nQuestion or challenge: ${prompt}\n\nReasoning:`,
     );
 
     return result.trim();
   } catch (error) {
     console.error("Primary model failed:", error);
-    
+
     try {
       // Fallback to a different model
       const fallbackModel = new Ollama({
@@ -55,7 +59,7 @@ Provide concrete examples and patterns when possible.`;
         model: "llama3", // Fallback model
         temperature: 0.2,
       });
-      
+
       const fallbackResult = await fallbackModel.call(prompt);
       return fallbackResult.trim();
     } catch (fallbackError) {
@@ -69,16 +73,16 @@ Provide concrete examples and patterns when possible.`;
  * Get reasoning for route generation based on app description
  */
 export async function getRouteReasoning(
-  appDescription: string, 
+  appDescription: string,
   features?: string[],
-  existingRoutes?: string[]
+  existingRoutes?: string[],
 ): Promise<string> {
   if (!ollama) {
-    throw new Error('Ollama client is not initialized');
+    throw new Error("Ollama client is not initialized");
   }
-  
-  const modelName = process.env.REASONING_MODEL || 'llama3';
-  
+
+  const modelName = process.env.REASONING_MODEL || "llama3";
+
   const systemPrompt = `You are an expert in Next.js application architecture and routing.
 Provide clear, structured reasoning about route structure for a web application based on the provided description.
 Consider best practices for Next.js App Router, including:
@@ -92,38 +96,39 @@ Consider best practices for Next.js App Router, including:
 Explain your decisions with a focus on maintainability, user experience, and performance.`;
 
   let promptContent = `Application Description: ${appDescription}\n\n`;
-  
+
   if (features && features.length > 0) {
-    promptContent += `Features:\n${features.map(f => `- ${f}`).join('\n')}\n\n`;
+    promptContent += `Features:\n${features.map((f) => `- ${f}`).join("\n")}\n\n`;
   }
-  
+
   if (existingRoutes && existingRoutes.length > 0) {
-    promptContent += `Existing Routes:\n${existingRoutes.map(r => `- ${r}`).join('\n')}\n\n`;
+    promptContent += `Existing Routes:\n${existingRoutes.map((r) => `- ${r}`).join("\n")}\n\n`;
   }
-  
-  promptContent += 'Based on this information, reason through an optimal route structure for this application.';
-  
+
+  promptContent +=
+    "Based on this information, reason through an optimal route structure for this application.";
+
   try {
     const response = await ollama.chat({
       model: modelName,
       messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: promptContent }
+        { role: "system", content: systemPrompt },
+        { role: "user", content: promptContent },
       ],
-      stream: false
+      stream: false,
     });
-    
+
     return response.message.content;
   } catch (error) {
-    console.error('Error generating route reasoning:', error);
-    throw new Error('Failed to generate route reasoning');
+    console.error("Error generating route reasoning:", error);
+    throw new Error("Failed to generate route reasoning");
   }
 }
 
 export async function getUIUXReasoning(
   question: string,
   temperature: number = 0.7,
-  max_tokens: number = 2048
+  max_tokens: number = 2048,
 ): Promise<string> {
   try {
     const systemPrompt = `You are an expert UI/UX developer with deep knowledge of modern web development. 
@@ -158,7 +163,9 @@ Provide nuanced, expert-level reasoning that helps developers make informed deci
     if (!response.ok) {
       const errorData = await response.json();
       console.error("Ollama API error:", errorData);
-      throw new Error(`Ollama API error: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Ollama API error: ${response.status} ${response.statusText}`,
+      );
     }
 
     const reader = response.body?.getReader();
@@ -175,11 +182,11 @@ Provide nuanced, expert-level reasoning that helps developers make informed deci
 
       // Decode the value to text
       const chunk = new TextDecoder().decode(value);
-      
+
       try {
         // Ollama returns JSON objects for each token
-        const lines = chunk.split('\n').filter(line => line.trim() !== '');
-        
+        const lines = chunk.split("\n").filter((line) => line.trim() !== "");
+
         for (const line of lines) {
           const parsed = JSON.parse(line);
           if (parsed.response) {
@@ -196,4 +203,4 @@ Provide nuanced, expert-level reasoning that helps developers make informed deci
     console.error("Error in getUIUXReasoning:", error);
     throw error;
   }
-} 
+}

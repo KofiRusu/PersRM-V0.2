@@ -1,0 +1,14 @@
+Generate a pricing section with 3 plans (Basic, Pro, Enterprise). Include:
+- Monthly/yearly pricing toggle with 20% discount for yearly
+- Feature lists for each plan with checkmarks
+- Most popular plan should be highlighted
+- CTAs on each card that say "Get Started" or "Contact Sales" for Enterprise
+- Responsive design that stacks cards on mobile
+
+The section should match these brand colors:
+- Primary: #4f46e5
+- Secondary: #818cf8
+- Background: #f9fafb
+- Text: #1f2937
+
+Make sure it's accessible, has smooth transitions, and follows modern design practices. 

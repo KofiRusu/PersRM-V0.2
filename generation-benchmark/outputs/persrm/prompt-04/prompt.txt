@@ -1,0 +1,21 @@
+Create a contact form that allows users to send inquiries to a business. The form should:
+
+- Include the following fields:
+  * Full Name (required)
+  * Email Address (required, with validation)
+  * Phone Number (optional)
+  * Subject (dropdown with options: General Inquiry, Support, Sales, Partnership)
+  * Message (textarea, required, with character count)
+  * File attachment (optional, accept documents and images only)
+  * Checkbox for subscribing to newsletter
+  * Checkbox for agreeing to privacy policy (required)
+
+- Validate inputs in real-time with helpful error messages
+- Show a loading state during submission
+- Display success and error states after submission
+- Be fully responsive on all devices
+- Include proper labels and placeholder text
+- Be accessible with proper ARIA attributes and keyboard navigation
+- Have a clean, modern design with subtle animations for feedback
+
+The form should handle errors gracefully and guide users to correct any issues before submission. 

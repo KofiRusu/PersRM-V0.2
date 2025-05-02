@@ -1,8 +1,8 @@
-import { PersRMAgent } from '../lib/persrm/agent';
-import { AgentMode, PersRMConfig } from '../lib/persrm/types';
-import { logger, LogLevel } from '../lib/utils/logger';
-import * as path from 'path';
-import * as fs from 'fs-extra';
+import { PersRMAgent } from "../lib/persrm/agent";
+import { AgentMode, PersRMConfig } from "../lib/persrm/types";
+import { logger, LogLevel } from "../lib/utils/logger";
+import * as path from "path";
+import * as fs from "fs-extra";
 
 /**
  * Options for initializing the PersRM Agent
@@ -40,16 +40,16 @@ export class CursorPersRMAgent {
   constructor(workspacePath: string, options: CursorPersRMOptions = {}) {
     this.workspacePath = workspacePath;
     this.options = options;
-    
+
     // Set up logging
     logger.configure({
-      level: options.verbose ? LogLevel.DEBUG : LogLevel.INFO
+      level: options.verbose ? LogLevel.DEBUG : LogLevel.INFO,
     });
-    
+
     // Initialize config with sensible defaults
     const config: PersRMConfig = {
       projectPath: workspacePath,
-      outputDir: path.join(workspacePath, options.outputDir || 'persrm-output'),
+      outputDir: path.join(workspacePath, options.outputDir || "persrm-output"),
       mode: AgentMode.ANALYSIS,
       verbose: options.verbose || false,
       takeScreenshots: options.takeScreenshots || false,
@@ -57,15 +57,15 @@ export class CursorPersRMAgent {
       ciMode: options.ciMode || false,
       prNumber: options.prNumber,
       branch: options.branch,
-      githubToken: options.githubToken
+      githubToken: options.githubToken,
     };
-    
+
     // Store output dir
     this.outputDir = config.outputDir;
-    
+
     // Initialize the agent
     this.agent = new PersRMAgent(config);
-    
+
     logger.info(`PersRM Agent initialized for workspace: ${workspacePath}`);
   }
 
@@ -73,32 +73,32 @@ export class CursorPersRMAgent {
    * Run UX analysis on the current workspace
    */
   async analyzeProject(): Promise<AgentOperationResult> {
-    logger.info('Starting project analysis...');
-    
+    logger.info("Starting project analysis...");
+
     try {
       const result = await this.agent.analyze();
-      
+
       if (result.success) {
-        logger.success('Analysis completed successfully');
+        logger.success("Analysis completed successfully");
         return {
           success: true,
           overallScore: result.summary.overallScore,
           maxScore: result.summary.maxScore,
           issuesCount: result.issues.length,
-          reportPath: path.join(this.outputDir, 'analysis-result.json')
+          reportPath: path.join(this.outputDir, "analysis-result.json"),
         };
       } else {
-        logger.error('Analysis failed:', result.error);
+        logger.error("Analysis failed:", result.error);
         return {
           success: false,
-          error: result.error
+          error: result.error,
         };
       }
     } catch (error) {
-      logger.error('Error during analysis:', error);
+      logger.error("Error during analysis:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -106,30 +106,33 @@ export class CursorPersRMAgent {
   /**
    * Generate a UX report
    */
-  async generateReport(inputPath?: string, format: 'html' | 'md' | 'json' = 'html'): Promise<AgentOperationResult> {
-    logger.info('Generating UX report...');
-    
+  async generateReport(
+    inputPath?: string,
+    format: "html" | "md" | "json" = "html",
+  ): Promise<AgentOperationResult> {
+    logger.info("Generating UX report...");
+
     try {
       const reportOptions = {
         format,
         includeScreenshots: true,
         includeDiffs: true,
-        compareWithPrevious: false
+        compareWithPrevious: false,
       };
-      
+
       // Use runTask instead of direct method call since generateReport is private
       const result = await this.agent.runTask();
       const reportPath = path.join(this.outputDir, `report.${format}`);
-      
+
       return {
         success: true,
-        reportPath
+        reportPath,
       };
     } catch (error) {
-      logger.error('Error generating report:', error);
+      logger.error("Error generating report:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -138,33 +141,33 @@ export class CursorPersRMAgent {
    * Run component optimization
    */
   async optimizeComponents(): Promise<AgentOperationResult> {
-    logger.info('Starting component optimization...');
-    
+    logger.info("Starting component optimization...");
+
     try {
       const result = await this.agent.optimize();
-      
+
       if (result.success) {
-        logger.success('Optimization completed successfully');
+        logger.success("Optimization completed successfully");
         return {
           success: true,
           overallScore: result.summary.overallScore,
           maxScore: result.summary.maxScore,
           issuesCount: result.issues.length,
           suggestionsCount: result.suggestions.length,
-          reportPath: path.join(this.outputDir, 'optimization-result.json')
+          reportPath: path.join(this.outputDir, "optimization-result.json"),
         };
       } else {
-        logger.error('Optimization failed:', result.error);
+        logger.error("Optimization failed:", result.error);
         return {
           success: false,
-          error: result.error
+          error: result.error,
         };
       }
     } catch (error) {
-      logger.error('Error during optimization:', error);
+      logger.error("Error during optimization:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -194,7 +197,7 @@ export class CursorPersRMAgent {
    * Returns the current watch path
    */
   getWatchPath(): string {
-    return this.options.watchPath || './src/components';
+    return this.options.watchPath || "./src/components";
   }
 
   /**
@@ -213,11 +216,14 @@ export class CursorPersRMAgent {
    */
   disableAutoOptimize(): void {
     this.options.autoOptimize = false;
-    logger.info('Auto-optimization disabled');
+    logger.info("Auto-optimization disabled");
   }
 }
 
 // Export a factory function as default
-export default function createPersRMAgent(workspacePath: string, options: CursorPersRMOptions = {}): CursorPersRMAgent {
+export default function createPersRMAgent(
+  workspacePath: string,
+  options: CursorPersRMOptions = {},
+): CursorPersRMAgent {
   return new CursorPersRMAgent(workspacePath, options);
-} 
+}

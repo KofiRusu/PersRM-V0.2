@@ -1,0 +1,16 @@
+Build a testimonial carousel that showcases customer feedback. The carousel should:
+
+- Display 3 testimonials at a time on desktop, 1 on mobile
+- Auto-rotate every 5 seconds with smooth transitions
+- Include navigation dots and prev/next arrows
+- Allow pausing on hover or focus
+- For each testimonial, show:
+  * Customer quote (1-2 sentences)
+  * Customer name
+  * Customer role and company
+  * Customer avatar/photo (placeholder)
+  * Optional company logo
+
+Ensure the carousel is fully accessible with keyboard navigation and proper ARIA attributes. Users should be able to navigate with arrow keys and the carousel should announce changes to screen readers.
+
+Add subtle animations for transitions between testimonials. The design should be clean and focus on the content while fitting seamlessly into a modern website. 

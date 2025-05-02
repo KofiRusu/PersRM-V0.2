@@ -1,0 +1,18 @@
+Create a comprehensive data dashboard that visualizes key performance metrics with:
+
+- An overview section with summary cards showing critical KPIs
+- Interactive line and bar charts for trend analysis with customizable date ranges
+- Filterable data tables with sorting, pagination, and export capabilities
+- Geo-visualization map showing regional performance metrics
+- User-configurable dashboard layout with drag-and-drop widget positioning
+- Dark/light theme toggle for different viewing environments
+- Real-time data updates with subtle loading indicators
+- Responsive design that adapts to different screen sizes
+- Drill-down capability to explore data in greater detail
+- Alert indicators for metrics outside of expected ranges
+- Data insights panel with AI-generated observations about trends
+- Customizable threshold settings for various metrics
+- Easy sharing options for reports (PDF, image export, URL sharing)
+- Accessible design with proper color contrast, keyboard navigation, and screen reader support
+
+The dashboard should load efficiently, handle large datasets gracefully, and provide intuitive controls for filtering and customization. 

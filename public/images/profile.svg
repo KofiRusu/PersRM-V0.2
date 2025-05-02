@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <circle cx="100" cy="70" r="40" fill="#f0f9ff" stroke="#3b82f6" stroke-width="2"/>
+  <circle cx="100" cy="65" r="15" fill="#3b82f6"/>
+  <path d="M70,130 Q100,170 130,130" stroke="#3b82f6" stroke-width="2" fill="none"/>
+  <rect x="40" y="120" width="120" height="60" rx="5" ry="5" fill="#f0f9ff" stroke="#3b82f6" stroke-width="2"/>
+  <line x1="60" y1="140" x2="140" y2="140" stroke="#3b82f6" stroke-width="2"/>
+  <line x1="60" y1="160" x2="140" y2="160" stroke="#3b82f6" stroke-width="2"/>
+  <text x="100" y="30" font-family="Arial" font-size="14" text-anchor="middle" fill="#3b82f6">Complete Your Profile</text>
+</svg> 
