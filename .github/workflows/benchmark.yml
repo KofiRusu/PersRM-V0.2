@@ -11,11 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NODE_ENV: production
-      BENCHMARK_ALERT_WEBHOOK_URL: ${{ secrets.BENCHMARK_ALERT_WEBHOOK_URL }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
       NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
       NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
 
     steps:
       - name: Checkout repository
