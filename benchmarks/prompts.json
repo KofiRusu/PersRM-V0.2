@@ -1,0 +1,27 @@
+[
+  {
+    "id": "ui-button-basic",
+    "description": "Generate a React button component with props for label and onClick",
+    "input": "Create a React component for a customizable button with a label and onClick handler. Use Tailwind CSS."
+  },
+  {
+    "id": "form-schema-to-ui",
+    "description": "Convert a JSON schema into a React form",
+    "input": "Generate a React form using Tailwind from this schema: { 'title': 'Contact', 'type': 'object', 'properties': { 'name': { 'type': 'string' }, 'email': { 'type': 'string' }, 'message': { 'type': 'string' } } }"
+  },
+  {
+    "id": "accessibility-check",
+    "description": "Evaluate this component for accessibility issues",
+    "input": "Analyze the following HTML for accessibility and fix issues: <button>Click</button>"
+  },
+  {
+    "id": "reasoning-about-layout",
+    "description": "Reason about the best layout for a dashboard",
+    "input": "Design a responsive dashboard layout with a sidebar, header, and main content area. What should the component structure be?"
+  },
+  {
+    "id": "code-enhancement-suggestion",
+    "description": "Improve given code snippet with best practices",
+    "input": "Improve the following component: const Btn = () => <button>OK</button>"
+  }
+] 

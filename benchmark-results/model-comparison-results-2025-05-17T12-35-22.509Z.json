@@ -1,0 +1,151 @@
+{
+  "models": {
+    "GPT-4o": {
+      "totalTime": 0,
+      "successCount": 0,
+      "failCount": 5,
+      "avgResponseTime": 0,
+      "avgOutputLength": 0,
+      "successRate": 0
+    },
+    "GPT-3.5 Turbo": {
+      "totalTime": 0,
+      "successCount": 0,
+      "failCount": 5,
+      "avgResponseTime": 0,
+      "avgOutputLength": 0,
+      "successRate": 0
+    },
+    "DeepSeek Chat": {
+      "totalTime": 0,
+      "successCount": 0,
+      "failCount": 5,
+      "avgResponseTime": 0,
+      "avgOutputLength": 0,
+      "successRate": 0
+    }
+  },
+  "prompts": {
+    "ui-button-basic": {
+      "results": {
+        "GPT-4o": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "OPENAI_API_KEY environment variable is not set"
+        },
+        "GPT-3.5 Turbo": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "OPENAI_API_KEY environment variable is not set"
+        },
+        "DeepSeek Chat": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "DEEPSEEK_API_KEY environment variable is not set"
+        }
+      },
+      "bestModel": null,
+      "worstModel": null
+    },
+    "form-schema-to-ui": {
+      "results": {
+        "GPT-4o": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "OPENAI_API_KEY environment variable is not set"
+        },
+        "GPT-3.5 Turbo": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "OPENAI_API_KEY environment variable is not set"
+        },
+        "DeepSeek Chat": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "DEEPSEEK_API_KEY environment variable is not set"
+        }
+      },
+      "bestModel": null,
+      "worstModel": null
+    },
+    "accessibility-check": {
+      "results": {
+        "GPT-4o": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "OPENAI_API_KEY environment variable is not set"
+        },
+        "GPT-3.5 Turbo": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "OPENAI_API_KEY environment variable is not set"
+        },
+        "DeepSeek Chat": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "DEEPSEEK_API_KEY environment variable is not set"
+        }
+      },
+      "bestModel": null,
+      "worstModel": null
+    },
+    "reasoning-about-layout": {
+      "results": {
+        "GPT-4o": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "OPENAI_API_KEY environment variable is not set"
+        },
+        "GPT-3.5 Turbo": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "OPENAI_API_KEY environment variable is not set"
+        },
+        "DeepSeek Chat": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "DEEPSEEK_API_KEY environment variable is not set"
+        }
+      },
+      "bestModel": null,
+      "worstModel": null
+    },
+    "code-enhancement-suggestion": {
+      "results": {
+        "GPT-4o": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "OPENAI_API_KEY environment variable is not set"
+        },
+        "GPT-3.5 Turbo": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "OPENAI_API_KEY environment variable is not set"
+        },
+        "DeepSeek Chat": {
+          "responseTime": 0,
+          "outputLength": 0,
+          "success": false,
+          "error": "DEEPSEEK_API_KEY environment variable is not set"
+        }
+      },
+      "bestModel": null,
+      "worstModel": null
+    }
+  },
+  "comparisons": []
+}

@@ -1,0 +1,247 @@
+[
+  {
+    "endpoint": "/api/reasoning",
+    "query": "Modal vs Dialog",
+    "input": "Should I use a modal dialog or a slide-over panel for form input?",
+    "min": 0,
+    "max": 0,
+    "avg": 0,
+    "median": 0,
+    "p95": 0,
+    "successRate": 0,
+    "iterations": 1,
+    "avgTokens": 0,
+    "expectedTokens": 1200,
+    "tokenAccuracy": 0,
+    "avgMemoryDelta": {
+      "rss": 4.25,
+      "heapTotal": 0.453125,
+      "heapUsed": 0.696136474609375
+    },
+    "rawResults": [
+      {
+        "responseTime": 549.3045410000013,
+        "error": "API returned status 500",
+        "response": null,
+        "tokenCount": 0,
+        "success": false,
+        "memoryDelta": {
+          "rss": 4.25,
+          "heapTotal": 0.453125,
+          "heapUsed": 0.696136474609375
+        },
+        "timestamp": "2025-05-17T12:16:44.883Z"
+      }
+    ]
+  },
+  {
+    "endpoint": "/api/reasoning",
+    "query": "Form Validation",
+    "input": "What's the best approach for form validation in React?",
+    "min": 0,
+    "max": 0,
+    "avg": 0,
+    "median": 0,
+    "p95": 0,
+    "successRate": 0,
+    "iterations": 1,
+    "avgTokens": 0,
+    "expectedTokens": 1500,
+    "tokenAccuracy": 0,
+    "avgMemoryDelta": {
+      "rss": 0.40625,
+      "heapTotal": 0,
+      "heapUsed": 0.10590362548828125
+    },
+    "rawResults": [
+      {
+        "responseTime": 31.74133299999812,
+        "error": "API returned status 500",
+        "response": null,
+        "tokenCount": 0,
+        "success": false,
+        "memoryDelta": {
+          "rss": 0.40625,
+          "heapTotal": 0,
+          "heapUsed": 0.10590362548828125
+        },
+        "timestamp": "2025-05-17T12:16:44.917Z"
+      }
+    ]
+  },
+  {
+    "endpoint": "/api/reasoning",
+    "query": "Layout Structure",
+    "input": "How should I structure my dashboard layout for responsive design?",
+    "min": 0,
+    "max": 0,
+    "avg": 0,
+    "median": 0,
+    "p95": 0,
+    "successRate": 0,
+    "iterations": 1,
+    "avgTokens": 0,
+    "expectedTokens": 1800,
+    "tokenAccuracy": 0,
+    "avgMemoryDelta": {
+      "rss": 0.109375,
+      "heapTotal": 0,
+      "heapUsed": 0.0706939697265625
+    },
+    "rawResults": [
+      {
+        "responseTime": 44.2298750000009,
+        "error": "API returned status 500",
+        "response": null,
+        "tokenCount": 0,
+        "success": false,
+        "memoryDelta": {
+          "rss": 0.109375,
+          "heapTotal": 0,
+          "heapUsed": 0.0706939697265625
+        },
+        "timestamp": "2025-05-17T12:16:44.962Z"
+      }
+    ]
+  },
+  {
+    "endpoint": "/api/codegen",
+    "query": "Button Component",
+    "input": "Create a reusable button component with variants",
+    "min": 0,
+    "max": 0,
+    "avg": 0,
+    "median": 0,
+    "p95": 0,
+    "successRate": 0,
+    "iterations": 1,
+    "avgTokens": 0,
+    "expectedTokens": 800,
+    "tokenAccuracy": 0,
+    "avgMemoryDelta": {
+      "rss": 0.09375,
+      "heapTotal": 0,
+      "heapUsed": 0.05750274658203125
+    },
+    "rawResults": [
+      {
+        "responseTime": 27.01324999999997,
+        "error": "API returned status 500",
+        "response": null,
+        "tokenCount": 0,
+        "success": false,
+        "memoryDelta": {
+          "rss": 0.09375,
+          "heapTotal": 0,
+          "heapUsed": 0.05750274658203125
+        },
+        "timestamp": "2025-05-17T12:16:44.989Z"
+      }
+    ]
+  },
+  {
+    "endpoint": "/api/codegen",
+    "query": "Data Table",
+    "input": "Generate a sortable and filterable data table component",
+    "min": 0,
+    "max": 0,
+    "avg": 0,
+    "median": 0,
+    "p95": 0,
+    "successRate": 0,
+    "iterations": 1,
+    "avgTokens": 0,
+    "expectedTokens": 1200,
+    "tokenAccuracy": 0,
+    "avgMemoryDelta": {
+      "rss": 0.234375,
+      "heapTotal": 0,
+      "heapUsed": 0.08229827880859375
+    },
+    "rawResults": [
+      {
+        "responseTime": 29.213874999997643,
+        "error": "API returned status 500",
+        "response": null,
+        "tokenCount": 0,
+        "success": false,
+        "memoryDelta": {
+          "rss": 0.234375,
+          "heapTotal": 0,
+          "heapUsed": 0.08229827880859375
+        },
+        "timestamp": "2025-05-17T12:16:45.019Z"
+      }
+    ]
+  },
+  {
+    "endpoint": "/api/route",
+    "query": "Authentication API",
+    "input": "Create authentication routes with JWT",
+    "min": 0,
+    "max": 0,
+    "avg": 0,
+    "median": 0,
+    "p95": 0,
+    "successRate": 0,
+    "iterations": 1,
+    "avgTokens": 0,
+    "expectedTokens": 1000,
+    "tokenAccuracy": 0,
+    "avgMemoryDelta": {
+      "rss": 0.078125,
+      "heapTotal": 0,
+      "heapUsed": 0.0560150146484375
+    },
+    "rawResults": [
+      {
+        "responseTime": 21.212208000000828,
+        "error": "API returned status 500",
+        "response": null,
+        "tokenCount": 0,
+        "success": false,
+        "memoryDelta": {
+          "rss": 0.078125,
+          "heapTotal": 0,
+          "heapUsed": 0.0560150146484375
+        },
+        "timestamp": "2025-05-17T12:16:45.041Z"
+      }
+    ]
+  },
+  {
+    "endpoint": "/api/route",
+    "query": "CRUD API",
+    "input": "Generate CRUD API routes for a blog post resource",
+    "min": 0,
+    "max": 0,
+    "avg": 0,
+    "median": 0,
+    "p95": 0,
+    "successRate": 0,
+    "iterations": 1,
+    "avgTokens": 0,
+    "expectedTokens": 1500,
+    "tokenAccuracy": 0,
+    "avgMemoryDelta": {
+      "rss": 0.484375,
+      "heapTotal": 1,
+      "heapUsed": -0.7408294677734375
+    },
+    "rawResults": [
+      {
+        "responseTime": 15.363499999999476,
+        "error": "API returned status 500",
+        "response": null,
+        "tokenCount": 0,
+        "success": false,
+        "memoryDelta": {
+          "rss": 0.484375,
+          "heapTotal": 1,
+          "heapUsed": -0.7408294677734375
+        },
+        "timestamp": "2025-05-17T12:16:45.057Z"
+      }
+    ]
+  }
+]

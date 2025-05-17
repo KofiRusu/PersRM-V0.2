@@ -1,0 +1,151 @@
+{
+  "models": {
+    "GPT-4o": {
+      "totalTime": 19677,
+      "successCount": 5,
+      "failCount": 0,
+      "avgResponseTime": 3935.4,
+      "avgCodeLength": 973.6,
+      "successRate": 100
+    },
+    "GPT-3.5 Turbo": {
+      "totalTime": 8900,
+      "successCount": 5,
+      "failCount": 0,
+      "avgResponseTime": 1780,
+      "avgCodeLength": 735.6,
+      "successRate": 100
+    },
+    "DeepSeek Chat": {
+      "totalTime": 22021,
+      "successCount": 5,
+      "failCount": 0,
+      "avgResponseTime": 4404.2,
+      "avgCodeLength": 879.6,
+      "successRate": 100
+    }
+  },
+  "prompts": {
+    "Button Component": {
+      "results": {
+        "GPT-4o": {
+          "responseTime": 4753,
+          "codeLength": 881,
+          "success": true,
+          "code": "// Generated with openai gpt-4o\n// Prompt: Create a reusable button component with primary, secondary, and outline variants\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for openai:gpt-4o</div>;\n}\n\nexport default Component;"
+        },
+        "GPT-3.5 Turbo": {
+          "responseTime": 1679,
+          "codeLength": 775,
+          "success": true,
+          "code": "// Generated with openai gpt-3.5-turbo\n// Prompt: Create a reusable button component with primary, secondary, and outline variants\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for openai:gpt-3.5-turbo</div>;\n}\n\nexport default Component;"
+        },
+        "DeepSeek Chat": {
+          "responseTime": 4810,
+          "codeLength": 879,
+          "success": true,
+          "code": "// Generated with deepseek deepseek-chat\n// Prompt: Create a reusable button component with primary, secondary, and outline variants\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for deepseek:deepseek-chat</div>;\n}\n\nexport default Component;"
+        }
+      },
+      "bestModel": "GPT-3.5 Turbo",
+      "worstModel": "DeepSeek Chat"
+    },
+    "Form Validation": {
+      "results": {
+        "GPT-4o": {
+          "responseTime": 3684,
+          "codeLength": 1015,
+          "success": true,
+          "code": "// Generated with openai gpt-4o\n// Prompt: Create a contact form with name, email, and message fields with validation\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for openai:gpt-4o</div>;\n}\n\nexport default Component;"
+        },
+        "GPT-3.5 Turbo": {
+          "responseTime": 1752,
+          "codeLength": 749,
+          "success": true,
+          "code": "// Generated with openai gpt-3.5-turbo\n// Prompt: Create a contact form with name, email, and message fields with validation\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for openai:gpt-3.5-turbo</div>;\n}\n\nexport default Component;"
+        },
+        "DeepSeek Chat": {
+          "responseTime": 3235,
+          "codeLength": 913,
+          "success": true,
+          "code": "// Generated with deepseek deepseek-chat\n// Prompt: Create a contact form with name, email, and message fields with validation\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for deepseek:deepseek-chat</div>;\n}\n\nexport default Component;"
+        }
+      },
+      "bestModel": "GPT-3.5 Turbo",
+      "worstModel": "GPT-4o"
+    },
+    "Data Dashboard": {
+      "results": {
+        "GPT-4o": {
+          "responseTime": 3624,
+          "codeLength": 959,
+          "success": true,
+          "code": "// Generated with openai gpt-4o\n// Prompt: Create a simple dashboard component with a summary card, chart, and data table\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for openai:gpt-4o</div>;\n}\n\nexport default Component;"
+        },
+        "GPT-3.5 Turbo": {
+          "responseTime": 1891,
+          "codeLength": 673,
+          "success": true,
+          "code": "// Generated with openai gpt-3.5-turbo\n// Prompt: Create a simple dashboard component with a summary card, chart, and data table\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for openai:gpt-3.5-turbo</div>;\n}\n\nexport default Component;"
+        },
+        "DeepSeek Chat": {
+          "responseTime": 4756,
+          "codeLength": 837,
+          "success": true,
+          "code": "// Generated with deepseek deepseek-chat\n// Prompt: Create a simple dashboard component with a summary card, chart, and data table\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for deepseek:deepseek-chat</div>;\n}\n\nexport default Component;"
+        }
+      },
+      "bestModel": "GPT-3.5 Turbo",
+      "worstModel": "DeepSeek Chat"
+    },
+    "Navigation Bar": {
+      "results": {
+        "GPT-4o": {
+          "responseTime": 3245,
+          "codeLength": 989,
+          "success": true,
+          "code": "// Generated with openai gpt-4o\n// Prompt: Create a responsive navigation bar with logo, links, and mobile menu\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for openai:gpt-4o</div>;\n}\n\nexport default Component;"
+        },
+        "GPT-3.5 Turbo": {
+          "responseTime": 2058,
+          "codeLength": 763,
+          "success": true,
+          "code": "// Generated with openai gpt-3.5-turbo\n// Prompt: Create a responsive navigation bar with logo, links, and mobile menu\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for openai:gpt-3.5-turbo</div>;\n}\n\nexport default Component;"
+        },
+        "DeepSeek Chat": {
+          "responseTime": 4968,
+          "codeLength": 887,
+          "success": true,
+          "code": "// Generated with deepseek deepseek-chat\n// Prompt: Create a responsive navigation bar with logo, links, and mobile menu\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for deepseek:deepseek-chat</div>;\n}\n\nexport default Component;"
+        }
+      },
+      "bestModel": "GPT-3.5 Turbo",
+      "worstModel": "DeepSeek Chat"
+    },
+    "Product Card": {
+      "results": {
+        "GPT-4o": {
+          "responseTime": 4371,
+          "codeLength": 1024,
+          "success": true,
+          "code": "// Generated with openai gpt-4o\n// Prompt: Create a product card component for an e-commerce site with image, title, price, and add to cart button\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for openai:gpt-4o</div>;\n}\n\nexport default Component;"
+        },
+        "GPT-3.5 Turbo": {
+          "responseTime": 1520,
+          "codeLength": 718,
+          "success": true,
+          "code": "// Generated with openai gpt-3.5-turbo\n// Prompt: Create a product card component for an e-commerce site with image, title, price, and add to cart button\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for openai:gpt-3.5-turbo</div>;\n}\n\nexport default Component;"
+        },
+        "DeepSeek Chat": {
+          "responseTime": 4252,
+          "codeLength": 882,
+          "success": true,
+          "code": "// Generated with deepseek deepseek-chat\n// Prompt: Create a product card component for an e-commerce site with image, title, price, and add to cart button\n\nimport React from 'react';\n\nfunction Component() {\n    // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n  // Mock code line\n\n  return <div>Mock Component for deepseek:deepseek-chat</div>;\n}\n\nexport default Component;"
+        }
+      },
+      "bestModel": "GPT-3.5 Turbo",
+      "worstModel": "GPT-4o"
+    }
+  },
+  "comparisons": []
+}

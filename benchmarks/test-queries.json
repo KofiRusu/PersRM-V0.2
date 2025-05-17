@@ -1,0 +1,43 @@
+{
+  "reasoning": [
+    {
+      "name": "Modal vs Dialog",
+      "input": "Should I use a modal dialog or a slide-over panel for form input?",
+      "expectedTokens": 1200
+    },
+    {
+      "name": "Form Validation",
+      "input": "What's the best approach for form validation in React?",
+      "expectedTokens": 1500
+    },
+    {
+      "name": "Layout Structure",
+      "input": "How should I structure my dashboard layout for responsive design?",
+      "expectedTokens": 1800
+    }
+  ],
+  "codegen": [
+    {
+      "name": "Button Component",
+      "input": "Create a reusable button component with variants",
+      "expectedTokens": 800
+    },
+    {
+      "name": "Data Table",
+      "input": "Generate a sortable and filterable data table component",
+      "expectedTokens": 1200
+    }
+  ],
+  "route": [
+    {
+      "name": "Authentication API",
+      "input": "Create authentication routes with JWT",
+      "expectedTokens": 1000
+    },
+    {
+      "name": "CRUD API",
+      "input": "Generate CRUD API routes for a blog post resource",
+      "expectedTokens": 1500
+    }
+  ]
+} 

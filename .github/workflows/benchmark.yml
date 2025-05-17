@@ -1,0 +1,43 @@
+name: Benchmark Models
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # Nightly at 3AM UTC
+  push:
+    branches: [main]
+
+jobs:
+  run-benchmark:
+    runs-on: ubuntu-latest
+    env:
+      NODE_ENV: production
+      BENCHMARK_ALERT_WEBHOOK_URL: ${{ secrets.BENCHMARK_ALERT_WEBHOOK_URL }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+      NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run benchmark automation
+        run: npm run benchmark:auto
+
+      - name: Archive to Notion
+        if: ${{ env.NOTION_TOKEN != '' && env.NOTION_DATABASE_ID != '' }}
+        run: npm run benchmark:archive
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v3
+        with:
+          name: benchmark-results
+          path: benchmark-results/*.json 

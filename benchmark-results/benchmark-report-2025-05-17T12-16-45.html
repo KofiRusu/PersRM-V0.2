@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Benchmark Results - 2025-05-17T12-16-45</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .chart-container { width: 100%; height: 400px; margin-bottom: 30px; }
+    .results-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+    .results-table th, .results-table td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+    .results-table th { background-color: #f2f2f2; }
+    h1, h2 { color: #333; }
+    .summary { background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+    .metric-card {
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .metric-title { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
+    .metric-value { font-size: 24px; font-weight: bold; }
+    .metric-subtitle { font-size: 12px; color: #666; }
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Benchmark Results</h1>
+    
+    <div class="summary">
+      <h2>Summary</h2>
+      <p><strong>Date:</strong> 2025-05-17</p>
+      <p><strong>Endpoints Tested:</strong> reasoning, codegen, route</p>
+      <p><strong>Queries Tested:</strong> 7</p>
+    </div>
+    
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-title">Average Response Time</div>
+        <div class="metric-value">0ms</div>
+        <div class="metric-subtitle">Across all endpoints</div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-title">Success Rate</div>
+        <div class="metric-value">0.0%</div>
+        <div class="metric-subtitle">Successful requests</div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-title">Median Response Time</div>
+        <div class="metric-value">0ms</div>
+        <div class="metric-subtitle">50th percentile</div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-title">p95 Response Time</div>
+        <div class="metric-value">0ms</div>
+        <div class="metric-subtitle">95th percentile</div>
+      </div>
+    </div>
+    
+    <h2>Response Time by Endpoint</h2>
+    <div class="chart-container">
+      <canvas id="responseTimeChart"></canvas>
+    </div>
+    
+    <h2>Success Rate by Endpoint</h2>
+    <div class="chart-container">
+      <canvas id="successRateChart"></canvas>
+    </div>
+    
+    <h2>Detailed Results</h2>
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Endpoint</th>
+          <th>Query</th>
+          <th>Success Rate</th>
+          <th>Avg Time</th>
+          <th>Median</th>
+          <th>p95</th>
+          <th>Tokens</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+          <tr>
+            <td>reasoning</td>
+            <td>Modal vs Dialog</td>
+            <td>0.0%</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0</td>
+          </tr>
+        
+          <tr>
+            <td>reasoning</td>
+            <td>Form Validation</td>
+            <td>0.0%</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0</td>
+          </tr>
+        
+          <tr>
+            <td>reasoning</td>
+            <td>Layout Structure</td>
+            <td>0.0%</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0</td>
+          </tr>
+        
+          <tr>
+            <td>codegen</td>
+            <td>Button Component</td>
+            <td>0.0%</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0</td>
+          </tr>
+        
+          <tr>
+            <td>codegen</td>
+            <td>Data Table</td>
+            <td>0.0%</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0</td>
+          </tr>
+        
+          <tr>
+            <td>route</td>
+            <td>Authentication API</td>
+            <td>0.0%</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0</td>
+          </tr>
+        
+          <tr>
+            <td>route</td>
+            <td>CRUD API</td>
+            <td>0.0%</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0ms</td>
+            <td>0</td>
+          </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  
+  <script>
+    // Response time chart
+    new Chart(document.getElementById('responseTimeChart'), {
+      type: 'bar',
+      data: {
+        labels: ["Modal vs Dialog","Form Validation","Layout Structure","Button Component","Data Table","Authentication API","CRUD API"],
+        datasets: [{"label":"reasoning","data":[0,0,0],"backgroundColor":"rgba(75, 192, 192, 0.6)","borderColor":"rgba(75, 192, 192, 1)","borderWidth":1},{"label":"codegen","data":[0,0],"backgroundColor":"rgba(54, 162, 235, 0.6)","borderColor":"rgba(54, 162, 235, 1)","borderWidth":1},{"label":"route","data":[0,0],"backgroundColor":"rgba(153, 102, 255, 0.6)","borderColor":"rgba(153, 102, 255, 1)","borderWidth":1}]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Response Time (ms)'
+            }
+          }
+        }
+      }
+    });
+    
+    // Success rate chart
+    new Chart(document.getElementById('successRateChart'), {
+      type: 'bar',
+      data: {
+        labels: ["Modal vs Dialog","Form Validation","Layout Structure","Button Component","Data Table","Authentication API","CRUD API"],
+        datasets: [{"label":"reasoning","data":[0,0,0],"backgroundColor":"rgba(75, 192, 192, 0.6)","borderColor":"rgba(75, 192, 192, 1)","borderWidth":1},{"label":"codegen","data":[0,0],"backgroundColor":"rgba(54, 162, 235, 0.6)","borderColor":"rgba(54, 162, 235, 1)","borderWidth":1},{"label":"route","data":[0,0],"backgroundColor":"rgba(153, 102, 255, 0.6)","borderColor":"rgba(153, 102, 255, 1)","borderWidth":1}]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Success Rate (%)'
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+  

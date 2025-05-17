@@ -30,6 +30,7 @@ program
   .option('-e, --endpoints <endpoints>', 'Comma-separated list of endpoints to test', 'reasoning,codegen,route')
   .option('-s, --server', 'Start a local server for testing')
   .option('-p, --port <number>', 'Port for local server', '3001')
+  .option('--server-port <number>', 'Port for HTTP server in server mode', '8765')
   .option('-m, --memory', 'Include memory usage statistics (Node.js only)')
   .option('-d, --delay <ms>', 'Delay between requests in milliseconds', '1000')
   .parse(process.argv);
@@ -719,9 +720,9 @@ function printBenchmarkSummary(results) {
 }
 
 /**
- * Main function
+ * Run all benchmarks and return results
  */
-async function main() {
+async function runAllBenchmarks() {
   const {
     output,
     queries: queriesPath,
@@ -743,8 +744,7 @@ async function main() {
     .map(e => API_ENDPOINTS[e]);
   
   if (endpoints.length === 0) {
-    console.error(chalk.red(`No valid endpoints specified. Available endpoints: ${Object.keys(API_ENDPOINTS).join(', ')}`));
-    process.exit(1);
+    throw new Error(`No valid endpoints specified. Available endpoints: ${Object.keys(API_ENDPOINTS).join(', ')}`);
   }
   
   console.log(chalk.blue(`=== PersLM System Benchmark ===`));
@@ -761,14 +761,16 @@ async function main() {
   const queries = loadTestQueries(queriesPath);
   
   // Start local server if requested
+  let localServerStarted = false;
   if (server) {
     try {
       await startLocalServer(port);
       options.baseUrl = `http://localhost:${port}`;
       console.log(chalk.blue(`Using local server at ${options.baseUrl}`));
+      localServerStarted = true;
     } catch (error) {
       console.error(chalk.red(`Failed to start local server: ${error.message}`));
-      process.exit(1);
+      throw error;
     }
   }
   
@@ -800,25 +802,176 @@ async function main() {
     } else {
       console.log(chalk.yellow(`\nNo benchmark results to export.`));
     }
+    
+    return allResults;
   } finally {
-    // Clean up
-    if (server) {
+    // Clean up if we started a local server
+    if (localServerStarted) {
       killServer();
     }
   }
 }
 
-// Handle clean shutdown
-process.on('SIGINT', () => {
-  console.log(chalk.yellow('\nBenchmark interrupted.'));
-  killServer();
-  process.exit(0);
-});
+/**
+ * Main function
+ */
+async function main() {
+  try {
+    await runAllBenchmarks();
+  } catch (error) {
+    console.error(chalk.red(`Benchmark failed with error: ${error.message}`));
+    console.error(error.stack);
+    killServer();
+    process.exit(1);
+  }
+}
 
-// Run the script
-main().catch(error => {
-  console.error(chalk.red(`Benchmark failed with error: ${error.message}`));
-  console.error(error.stack);
-  killServer();
-  process.exit(1);
-}); 
+// Check if we should run in server mode
+if (options.server === true) {
+  const http = require("http");
+  const serverPort = parseInt(options.serverPort || '8765'); // Use custom port or default to 8765
+  
+  // Create a modified version of options for server mode
+  const serverOptions = { ...options };
+  serverOptions.server = false; // Prevent recursive server startup
+  
+  // Function to parse request body
+  const parseRequestBody = (req) => {
+    return new Promise((resolve, reject) => {
+      let body = '';
+      req.on('data', (chunk) => {
+        body += chunk.toString();
+      });
+      req.on('end', () => {
+        try {
+          if (body) {
+            resolve(JSON.parse(body));
+          } else {
+            resolve({});
+          }
+        } catch (err) {
+          reject(new Error('Invalid JSON'));
+        }
+      });
+      req.on('error', reject);
+    });
+  };
+
+  const server = http.createServer(async (req, res) => {
+    // Add CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    
+    // Handle OPTIONS preflight
+    if (req.method === 'OPTIONS') {
+      res.writeHead(204);
+      res.end();
+      return;
+    }
+    
+    if ((req.method === "POST" || req.method === "GET") && req.url === "/run") {
+      console.log(`Received ${req.method} request to /run`);
+      
+      try {
+        // Get custom parameters for this run
+        let customParams = {};
+        if (req.method === "POST") {
+          try {
+            customParams = await parseRequestBody(req);
+          } catch (err) {
+            console.error(`Error parsing request body: ${err.message}`);
+          }
+        }
+        
+        // Merge with default options
+        const runOptions = { ...serverOptions };
+        if (customParams.endpoints) {
+          runOptions.endpoints = customParams.endpoints;
+        }
+        if (customParams.iterations) {
+          runOptions.iterations = customParams.iterations;
+        }
+        if (customParams.concurrency) {
+          runOptions.concurrency = customParams.concurrency;
+        }
+        
+        // Store original options
+        const originalOptions = { ...options };
+        
+        // Temporarily override options
+        Object.assign(options, runOptions);
+        
+        console.log(`Starting benchmark run with options:`, {
+          endpoints: options.endpoints,
+          iterations: options.iterations,
+          concurrency: options.concurrency
+        });
+        
+        // Run benchmarks
+        const results = await runAllBenchmarks().catch(err => {
+          console.error(`Error running benchmarks: ${err.message}`);
+          return { error: err.message };
+        });
+        
+        // Restore original options
+        Object.assign(options, originalOptions);
+        
+        // Return results
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ 
+          success: !results.error, 
+          timestamp: new Date().toISOString(),
+          results: results.error ? null : results,
+          error: results.error
+        }));
+      } catch (err) {
+        console.error(`Server error: ${err.message}`);
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ 
+          success: false, 
+          error: err.message 
+        }));
+      }
+    } else if (req.method === "GET" && req.url === "/status") {
+      // Simple status endpoint
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ 
+        status: "running",
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString()
+      }));
+    } else {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ 
+        error: "Not found",
+        endpoints: [
+          { method: "GET", path: "/status", description: "Server status" },
+          { method: "GET|POST", path: "/run", description: "Run benchmark tests" }
+        ]
+      }));
+    }
+  });
+
+  // Add error handler to prevent crashes
+  server.on('error', (err) => {
+    console.error(`Server error: ${err.message}`);
+  });
+
+  server.listen(serverPort, () => {
+    console.log(chalk.green(`Benchmark server listening on http://localhost:${serverPort}`));
+    console.log(`Available endpoints:`);
+    console.log(`  GET  /status - Check server status`);
+    console.log(`  POST /run    - Run benchmark tests`);
+  });
+} else {
+  // Handle clean shutdown
+  process.on('SIGINT', () => {
+    console.log(chalk.yellow('\nBenchmark interrupted.'));
+    killServer();
+    process.exit(0);
+  });
+
+  // Run the script in CLI mode
+  main();
+} 
